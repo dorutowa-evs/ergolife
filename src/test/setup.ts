@@ -14,3 +14,10 @@ const localStorageMock = (() => {
 })()
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock, writable: true })
+
+// ResizeObserver mock (required by shadcn Slider / Radix UI in jsdom)
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
