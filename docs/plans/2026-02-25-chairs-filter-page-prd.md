@@ -3,6 +3,28 @@
 日期：2026-02-25
 状态：Draft
 关联总文档：`2026-02-25-office-chair-mvp-design.md`
+视觉参考：`docs/assets/prototype-visual-reference.md`
+
+---
+
+## 0. 技术栈 / UI 库
+
+- **框架：** Next.js 15 App Router + TypeScript
+- **样式：** Tailwind CSS v4
+- **组件库：** [shadcn/ui](https://ui.shadcn.com/)（基于 Radix UI + Tailwind）
+- **测试：** Vitest + @testing-library/react
+
+### shadcn 组件使用范围
+
+| 功能 | shadcn 组件 |
+|---|---|
+| 价格滑条 | `<Slider>` |
+| 材质多选 | `<Checkbox>` |
+| Toast 通知 | Sonner（`<Toaster>` from `sonner`） |
+| 分页 / 通用按钮 | `<Button>` |
+| 卡片 Badge（TOP PICK / SALE） | `<Badge>` |
+
+> **开发时：** 优先使用 shadcn 组件，自定义样式通过 `className` prop 覆盖 Tailwind class。
 
 ---
 
@@ -118,9 +140,13 @@
 #### 卡片设计
 
 **默认态：**
-- 图片（4:3 比例，居中裁切）
+- 图片区域（4:3 比例，居中裁切）
+  - 可选 Badge（`TOP_PICK` / `SALE`）显示于图片左上角，数据来自 `chairs.catalog.json` 的可选字段 `badge`
 - 商品名称
+- 已加入对比时：名称下方常驻显示 `✓ 已加入对比`（灰色小字），卡片边框加深
 - 价格
+  - SALE 商品显示现价 + 原价删除线（`originalPrice` 字段，可选）
+- `Details →` 链接（跳转至 `/chairs/[id]`）
 
 **Hover 态（鼠标悬停图片区域时）：**
 - 图片上出现半透明深色遮罩
@@ -132,6 +158,15 @@
 - 点击卡片（非按钮区域）：跳转至详情页 `/chairs/[id]`
 - 点击"加入对比"：将该商品加入对比列表
 - 点击"移出对比"：将该商品从对比列表移除
+
+#### 卡片 Catalog 数据字段扩展（可选）
+
+以下字段为可选，不存在时卡片正常显示不报错：
+
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `badge` | `"TOP_PICK" \| "SALE"` \| `undefined` | 卡片图片角标 |
+| `originalPrice` | `number` \| `undefined` | 原价（配合 `badge: "SALE"` 显示删除线）|
 
 #### 空状态
 

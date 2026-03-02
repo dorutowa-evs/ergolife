@@ -6,7 +6,8 @@
 
 **Architecture:** Next.js 15 App Router + TypeScript。筛选逻辑抽离为纯函数便于测试。状态分三层：FilterContext（筛选条件）、CompareContext（对比列表）、页面级 useLocalStorage（排序、分页）。数据全部来自 `src/data/chairs.catalog.json`，价格边界与筛选选项在运行时从数据派生，不硬编码。
 
-**Tech Stack:** Next.js 15 · TypeScript · Tailwind CSS v3 · @radix-ui/react-slider · Vitest · @testing-library/react
+**Tech Stack:** Next.js 15 · TypeScript · Tailwind CSS v4 · shadcn/ui · Vitest · @testing-library/react
+**Visual Reference:** `docs/assets/prototype-visual-reference.md`
 
 **PRD:** `docs/plans/2026-02-25-chairs-filter-page-prd.md`
 **Catalog:** `src/data/chairs.catalog.json`（已存在，后续由用户补充椅子数据）
@@ -72,9 +73,26 @@ cat src/data/chairs.catalog.json | head -5
 **Step 4: 安装额外依赖**
 
 ```bash
-npm install @radix-ui/react-slider
 npm install -D vitest @vitejs/plugin-react @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
 ```
+
+**Step 4b: 初始化 shadcn/ui**
+
+shadcn/ui 基于 Radix UI + Tailwind CSS v4，与 Next.js 15 开箱兼容：
+
+```bash
+NPM_CONFIG_CACHE=/tmp/claude-1000/npm-cache npx --cache /tmp/claude-1000/npm-cache shadcn@latest init --defaults -y
+```
+
+Expected: 生成 `components.json`，在 `src/app/globals.css` 写入 CSS 变量。
+
+**Step 4c: 安装所需 shadcn 组件**
+
+```bash
+NPM_CONFIG_CACHE=/tmp/claude-1000/npm-cache npx --cache /tmp/claude-1000/npm-cache shadcn@latest add slider checkbox sonner button badge -y
+```
+
+Expected: 生成 `src/components/ui/slider.tsx`、`checkbox.tsx`、`sonner.tsx`、`button.tsx`、`badge.tsx`。
 
 **Step 5: 创建 `vitest.config.ts`**
 
@@ -195,6 +213,8 @@ export interface Chair {
   hasLumbar: boolean
   isLumbarAdjustable: boolean
   description: string
+  badge?: 'TOP_PICK' | 'SALE'   // 可选：卡片图片角标
+  originalPrice?: number         // 可选：SALE 时的原价（用于删除线显示）
 }
 
 /** 筛选条件状态 */
@@ -931,96 +951,34 @@ git commit -m "feat: add paginate helpers with ellipsis page numbers"
 
 ---
 
-## Task 9: Toast 系统
+## Task 9: Toast 系统（Sonner）
 
 **Files:**
-- Create: `src/contexts/ToastContext.tsx`
-- Create: `src/components/ui/Toaster.tsx`
+- Create: `src/hooks/useToast.ts`（封装 sonner 的 `toast()` 调用，供其他组件使用）
 
-**Step 1: 实现 ToastContext**
+> **注意：** 使用 shadcn 集成的 [Sonner](https://sonner.emilkowal.ski/)，已在 Step 4c 安装。
+> 不需要自定义 ToastContext；`<Toaster />` 直接放在 `layout.tsx` 中。
 
-```tsx
-// src/contexts/ToastContext.tsx
-'use client'
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
+**Step 1: 创建 useToast hook（封装 sonner API）**
 
-interface Toast {
-  id: number
-  message: string
-}
-
-interface ToastContextValue {
-  showToast: (message: string) => void
-  toasts: Toast[]
-  removeToast: (id: number) => void
-}
-
-const ToastContext = createContext<ToastContextValue | null>(null)
-let nextId = 0
-
-export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([])
-
-  const showToast = useCallback((message: string) => {
-    const id = nextId++
-    setToasts((prev) => [...prev, { id, message }])
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3000)
-  }, [])
-
-  const removeToast = (id: number) =>
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-
-  return (
-    <ToastContext.Provider value={{ showToast, toasts, removeToast }}>
-      {children}
-    </ToastContext.Provider>
-  )
-}
+```ts
+// src/hooks/useToast.ts
+import { toast } from 'sonner'
 
 export function useToast() {
-  const ctx = useContext(ToastContext)
-  if (!ctx) throw new Error('useToast must be used within ToastProvider')
-  return ctx
+  const showToast = (message: string) => toast(message)
+  return { showToast }
 }
 ```
 
-**Step 2: 实现 Toaster 组件**
-
-```tsx
-// src/components/ui/Toaster.tsx
-'use client'
-import { useToast } from '@/contexts/ToastContext'
-
-export function Toaster() {
-  const { toasts, removeToast } = useToast()
-
-  return (
-    <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
-      {toasts.map((t) => (
-        <div
-          key={t.id}
-          className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-lg pointer-events-auto flex items-center gap-3 animate-fade-in"
-        >
-          <span>{t.message}</span>
-          <button
-            onClick={() => removeToast(t.id)}
-            className="text-gray-400 hover:text-white text-base leading-none"
-          >
-            ×
-          </button>
-        </div>
-      ))}
-    </div>
-  )
-}
-```
-
-**Step 3: 提交**
+**Step 2: 提交**
 
 ```bash
-git add src/contexts/ToastContext.tsx src/components/ui/Toaster.tsx
-git commit -m "feat: add Toast system (context + Toaster component)"
+git add src/hooks/useToast.ts
+git commit -m "feat: add useToast hook wrapping sonner"
 ```
+
+> `<Toaster />` 组件在 Task 16 的 `layout.tsx` 中统一添加。
 
 ---
 
@@ -1096,7 +1054,7 @@ npm run test:run -- src/components/chairs/__tests__/PriceRangeSlider.test.tsx
 // src/components/chairs/PriceRangeSlider.tsx
 'use client'
 import { useState, useEffect } from 'react'
-import * as Slider from '@radix-ui/react-slider'
+import { Slider } from '@/components/ui/slider'
 
 interface Props {
   min: number
@@ -1130,18 +1088,12 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
 
   return (
     <div>
-      <Slider.Root
-        className="relative flex items-center select-none touch-none w-full h-5 mb-3"
+      <Slider
+        className="mb-3"
         min={min} max={max} step={10}
         value={[value[0], value[1]]}
         onValueChange={([a, b]) => onChange([a, b])}
-      >
-        <Slider.Track className="bg-gray-200 relative grow rounded-full h-1">
-          <Slider.Range className="absolute bg-gray-900 rounded-full h-full" />
-        </Slider.Track>
-        <Slider.Thumb className="block w-4 h-4 bg-white border-2 border-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900" />
-        <Slider.Thumb className="block w-4 h-4 bg-white border-2 border-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900" />
-      </Slider.Root>
+      />
 
       <div className="flex items-center gap-2">
         <div className="flex-1">
@@ -1212,6 +1164,7 @@ import { useFilter } from '@/contexts/FilterContext'
 import { getMaterials, getColors, getPriceBounds } from '@/lib/catalog'
 import { TriState } from '@/types/catalog'
 import { PriceRangeSlider } from './PriceRangeSlider'
+import { Checkbox } from '@/components/ui/checkbox'
 
 function TriStateGroup({
   label, value, onChange, onClear,
@@ -1322,11 +1275,10 @@ export function FilterPanel() {
           <div className="space-y-2">
             {materials.map((m) => (
               <label key={m.id} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
+                <Checkbox
+                  id={`mat-${m.id}`}
                   checked={filter.materials.includes(m.id)}
-                  onChange={() => toggleMaterial(m.id)}
-                  className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                  onCheckedChange={() => toggleMaterial(m.id)}
                 />
                 <span className="text-sm text-gray-600">{m.label}</span>
               </label>
@@ -1460,6 +1412,7 @@ npm run test:run -- src/components/chairs/__tests__/ChairCard.test.tsx
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
 import type { Chair } from '@/types/catalog'
 
 interface Props {
@@ -1469,12 +1422,20 @@ interface Props {
   onRemove: (id: string) => void
 }
 
+const BADGE_LABEL: Record<string, string> = {
+  TOP_PICK: 'TOP PICK',
+  SALE: 'SALE',
+}
+
 export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
   const placeholder = `https://placehold.co/400x300/f1f5f9/94a3b8?text=${encodeURIComponent(chair.name)}`
 
   return (
-    <div className="rounded-xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all bg-white">
+    <div className={`rounded-xl overflow-hidden border transition-all bg-white hover:shadow-md ${
+      isInCompare ? 'border-gray-900 border-2' : 'border-gray-100 hover:border-gray-200'
+    }`}>
+      {/* 图片区域 */}
       <div
         data-testid="card-image-area"
         className="relative aspect-[4/3] bg-gray-50 overflow-hidden"
@@ -1490,19 +1451,29 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
           />
         </Link>
 
+        {/* Badge（TOP PICK / SALE） */}
+        {chair.badge && (
+          <div className="absolute top-2 left-2">
+            <Badge className="bg-gray-900 text-white text-xs px-2 py-0.5 rounded-sm">
+              {BADGE_LABEL[chair.badge] ?? chair.badge}
+            </Badge>
+          </div>
+        )}
+
+        {/* Hover 遮罩 */}
         {hovered && (
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             {isInCompare ? (
               <button
                 onClick={(e) => { e.preventDefault(); onRemove(chair.id) }}
-                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
               >
                 ✓ 移出对比
               </button>
             ) : (
               <button
                 onClick={(e) => { e.preventDefault(); onAdd(chair.id) }}
-                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
               >
                 + 加入对比
               </button>
@@ -1511,12 +1482,37 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
         )}
       </div>
 
-      <Link href={`/chairs/${chair.id}`} className="block p-4">
-        <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-2">{chair.name}</p>
-        <p className="text-base font-semibold text-gray-900">
-          ${chair.price.toFixed(2)}
+      {/* 卡片内容区 */}
+      <div className="p-4">
+        <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-1">
+          {chair.name}
         </p>
-      </Link>
+
+        {/* 已加入对比常驻指示 */}
+        {isInCompare && (
+          <p className="text-xs text-gray-500 mb-2">✓ 已加入对比</p>
+        )}
+
+        {/* 价格区域 */}
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex items-baseline gap-2">
+            <span className="text-base font-semibold text-gray-900">
+              ${chair.price.toFixed(2)}
+            </span>
+            {chair.badge === 'SALE' && chair.originalPrice && (
+              <span className="text-sm text-gray-400 line-through">
+                ${chair.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+          <Link
+            href={`/chairs/${chair.id}`}
+            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            Details →
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1888,8 +1884,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { FilterProvider } from '@/contexts/FilterContext'
 import { CompareProvider } from '@/contexts/CompareContext'
-import { ToastProvider } from '@/contexts/ToastContext'
-import { Toaster } from '@/components/ui/Toaster'
+import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -1902,14 +1897,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastProvider>
-          <CompareProvider>
-            <FilterProvider>
-              {children}
-              <Toaster />
-            </FilterProvider>
-          </CompareProvider>
-        </ToastProvider>
+        <CompareProvider>
+          <FilterProvider>
+            {children}
+            <Toaster />
+          </FilterProvider>
+        </CompareProvider>
       </body>
     </html>
   )
@@ -1921,10 +1914,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```tsx
 // src/app/chairs/page.tsx
 'use client'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useFilter } from '@/contexts/FilterContext'
 import { useCompare } from '@/contexts/CompareContext'
-import { useToast } from '@/contexts/ToastContext'
+import { useToast } from '@/hooks/useToast'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { FilterPanel } from '@/components/chairs/FilterPanel'
 import { ChairCard } from '@/components/chairs/ChairCard'
