@@ -1,0 +1,61 @@
+{
+  "config": {
+    "minColumnWidth": 280,
+    "itemsPerPage": 12,
+    "priceMin": 0,
+    "priceMax": 10000
+  },
+  "materials": [
+    { "id": "mesh",            "label": "Mesh (网布)"           },
+    { "id": "leather",         "label": "Leather (皮革)"        },
+    { "id": "genuine-leather", "label": "Genuine Leather (真皮)" },
+    { "id": "fabric",          "label": "Fabric (布艺)"         },
+    { "id": "plastic",         "label": "Plastic (塑料)"        }
+  ],
+  "colors": [
+    { "id": "black",  "name": "黑色", "rgb": "#1a1a1a" },
+    { "id": "white",  "name": "白色", "rgb": "#f0ede8" },
+    { "id": "gray",   "name": "灰色", "rgb": "#8c8c8c" },
+    { "id": "brown",  "name": "棕色", "rgb": "#7c5c3e" },
+    { "id": "blue",   "name": "蓝色", "rgb": "#4a7fa5" },
+    { "id": "orange", "name": "橙色", "rgb": "#d4703a" }
+  ],
+  "chairs": [
+    {
+      "id": "c001",
+      "name": "ErgoMaster Pro Series Mesh Chair",
+      "price": 399,
+      "imageUrl": "",
+      "material": "mesh",
+      "color": "black",
+      "hasHeadrest": false,
+      "hasLumbar": true,
+      "isLumbarAdjustable": true,
+      "description": "Breathable full-mesh back with lumbar zone support for all-day comfort."
+    },
+    {
+      "id": "c002",
+      "name": "Executive Leather Task Chair",
+      "price": 599,
+      "imageUrl": "",
+      "material": "leather",
+      "color": "brown",
+      "hasHeadrest": true,
+      "hasLumbar": true,
+      "isLumbarAdjustable": false,
+      "description": "Premium bonded leather with a high-back design for executive presence."
+    },
+    {
+      "id": "c003",
+      "name": "Aeron Remastered Graphite",
+      "price": 1250,
+      "imageUrl": "",
+      "material": "mesh",
+      "color": "gray",
+      "hasHeadrest": false,
+      "hasLumbar": true,
+      "isLumbarAdjustable": true,
+      "description": "Iconic 8Z Pellicle mesh distributes weight evenly across seat and back."
+    }
+  ]
+}
