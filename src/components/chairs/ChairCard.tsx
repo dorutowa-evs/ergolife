@@ -19,7 +19,7 @@ const BADGE_LABEL: Record<string, string> = {
 
 export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
-  const placeholder = `https://placehold.co/400x300/f1f5f9/94a3b8?text=${encodeURIComponent(chair.name)}`
+  const placeholder = `https://placehold.co/400x300/f1f5f9/94a3b8.png?text=${encodeURIComponent(chair.name)}`
 
   return (
     <div className={`rounded-xl overflow-hidden border transition-all bg-white hover:shadow-md ${

@@ -41,7 +41,7 @@ export default function ChairsPage() {
   // 筛选/排序变化导致当前页越界时，回写 localStorage 使状态持久化
   useEffect(() => {
     if (safePage !== page) setPage(safePage)
-  }, [safePage, page])
+  }, [safePage, page, setPage])
 
   const currentItems = paginate(filtered, safePage, itemsPerPage)
 

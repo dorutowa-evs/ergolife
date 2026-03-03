@@ -15,11 +15,13 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   // Sync external value changes (e.g. reset) into local input state
+  const v0 = value[0]
+  const v1 = value[1]
   useEffect(() => {
-    setLocalMin(String(value[0]))
-    setLocalMax(String(value[1]))
+    setLocalMin(String(v0))
+    setLocalMax(String(v1))
     setError(null)
-  }, [value[0], value[1]])
+  }, [v0, v1])
 
   const commit = (rawMin: string, rawMax: string) => {
     const parsedMin = Math.max(min, Number(rawMin) || min)
