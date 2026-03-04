@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getPageNumbers } from '@/lib/paginate'
 
 interface Props {
@@ -19,7 +20,7 @@ export function Pagination({ current, total, onChange }: Props) {
         onClick={() => onChange(current - 1)}
         className="px-3 py-2 text-sm rounded-lg border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
       >
-        ←
+        <ChevronLeft className="w-4 h-4" />
       </button>
 
       {pages.map((p, i) =>
@@ -46,7 +47,7 @@ export function Pagination({ current, total, onChange }: Props) {
         onClick={() => onChange(current + 1)}
         className="px-3 py-2 text-sm rounded-lg border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
       >
-        →
+        <ChevronRight className="w-4 h-4" />
       </button>
     </nav>
   )

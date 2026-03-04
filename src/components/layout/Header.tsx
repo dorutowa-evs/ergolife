@@ -1,13 +1,14 @@
 import Link from 'next/link'
+import { Armchair } from 'lucide-react'
 
 export function Header() {
   return (
-    <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center gap-8">
           <Link href="/chairs" className="flex items-center gap-2 font-semibold text-gray-900">
-            <span className="text-xl">🪑</span>
+            <Armchair className="w-5 h-5" strokeWidth={1.5} />
             <span>ErgoLife</span>
           </Link>
           {/* Nav placeholders */}

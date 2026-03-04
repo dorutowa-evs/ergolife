@@ -44,28 +44,30 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
       />
 
       <div className="flex items-center gap-2">
-        <div className="flex-1">
+        <div className="flex-1 relative">
+          <span className="absolute inset-y-0 left-2 flex items-center text-sm text-gray-400 pointer-events-none">$</span>
           <input
             type="number"
             value={localMin}
             onChange={(e) => setLocalMin(e.target.value)}
             onBlur={() => commit(localMin, localMax)}
             onKeyDown={(e) => e.key === 'Enter' && commit(localMin, localMax)}
-            className={`w-full border rounded-md px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 ${
               error ? 'border-red-500 bg-red-50' : 'border-gray-200'
             }`}
             aria-label="最低价格"
           />
         </div>
         <span className="text-gray-400 text-sm shrink-0">—</span>
-        <div className="flex-1">
+        <div className="flex-1 relative">
+          <span className="absolute inset-y-0 left-2 flex items-center text-sm text-gray-400 pointer-events-none">$</span>
           <input
             type="number"
             value={localMax}
             onChange={(e) => setLocalMax(e.target.value)}
             onBlur={() => commit(localMin, localMax)}
             onKeyDown={(e) => e.key === 'Enter' && commit(localMin, localMax)}
-            className={`w-full border rounded-md px-2 py-1.5 text-sm text-center focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 ${
               error ? 'border-red-500 bg-red-50' : 'border-gray-200'
             }`}
             aria-label="最高价格"

@@ -26,15 +26,15 @@ function TriStateGroup({
           <button onClick={onClear} className="text-xs text-gray-400 hover:text-gray-600">×</button>
         )}
       </div>
-      <div className="flex rounded-md border border-gray-200 overflow-hidden">
+      <div className="flex bg-gray-100 p-1 rounded-lg gap-0.5">
         {options.map((opt) => (
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            className={`flex-1 py-1.5 text-xs font-medium transition-colors ${
+            className={`flex-1 py-1 text-xs font-medium rounded-md transition-all ${
               value === opt.value
-                ? 'bg-gray-900 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                ? 'bg-white shadow-sm text-gray-900'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             {opt.label}

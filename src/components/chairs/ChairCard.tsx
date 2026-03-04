@@ -24,7 +24,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div className={`rounded-xl overflow-hidden border transition-all bg-white hover:shadow-md ${
+    <div className={`rounded-xl overflow-hidden border transition-all bg-white shadow-sm hover:shadow-md ${
       isInCompare ? 'border-gray-900 border-2' : 'border-gray-100 hover:border-gray-200'
     }`}>
       {/* 图片区域 */}
@@ -64,14 +64,14 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
             {isInCompare ? (
               <button
                 onClick={(e) => { e.preventDefault(); onRemove(chair.id) }}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
               >
                 ✓ 移出对比
               </button>
             ) : (
               <button
                 onClick={(e) => { e.preventDefault(); onAdd(chair.id) }}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-700 transition-colors"
+                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
               >
                 + 加入对比
               </button>
@@ -81,7 +81,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
       </div>
 
       {/* 卡片内容区 */}
-      <div className="p-4">
+      <div className={`p-4 ${isInCompare ? 'bg-gray-50' : ''}`}>
         <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-0.5">
           {chair.name}
         </p>
