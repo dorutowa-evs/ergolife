@@ -18,11 +18,6 @@ export function Header() {
           </nav>
         </div>
 
-        {/* Right placeholders */}
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-400 cursor-default">Login</span>
-          <span className="text-gray-400 cursor-default text-xl">🛒</span>
-        </div>
       </div>
     </header>
   )
