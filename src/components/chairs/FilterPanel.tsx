@@ -46,7 +46,7 @@ function TriStateGroup({
 }
 
 export function FilterPanel() {
-  const { filter, setFilter, resetFilter } = useFilter()
+  const { filter, setFilter } = useFilter()
   const { min: absMin, max: absMax } = getPriceBounds()
   const materials = getMaterials()
   const colors = getColors()
@@ -65,22 +65,8 @@ export function FilterPanel() {
     setFilter({ ...filter, colors: next })
   }
 
-  const hasActive =
-    filter.priceMin > absMin || filter.priceMax < absMax ||
-    filter.materials.length > 0 || filter.colors.length > 0 ||
-    filter.headrest !== 'all' || filter.lumbar !== 'all' || filter.lumbarAdjustable !== 'all'
-
   return (
     <aside className="w-64 shrink-0">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-semibold text-gray-900">筛选条件</h2>
-        {hasActive && (
-          <button onClick={resetFilter} className="text-xs text-blue-600 hover:text-blue-800">
-            重置全部
-          </button>
-        )}
-      </div>
-
       <div className="space-y-0">
         {/* 价格 */}
         <div className="py-5">
