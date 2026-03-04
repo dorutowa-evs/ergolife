@@ -76,7 +76,7 @@ export default function ChairsPage() {
         {/* 右侧内容区 */}
         <div className="flex-1 min-w-0">
           {/* 工具栏 */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 bg-white border border-gray-100 rounded-xl px-4 py-3">
             <p className="text-sm text-gray-500">
               Showing{' '}
               <span className="font-semibold text-gray-900">{filtered.length}</span>{' '}

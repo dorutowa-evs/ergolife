@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Armchair } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { Chair } from '@/types/catalog'
 
@@ -17,9 +18,10 @@ const BADGE_LABEL: Record<string, string> = {
   SALE: 'SALE',
 }
 
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
 export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
-  const placeholder = `https://placehold.co/400x300/f1f5f9/94a3b8.png?text=${encodeURIComponent(chair.name)}`
 
   return (
     <div className={`rounded-xl overflow-hidden border transition-all bg-white hover:shadow-md ${
@@ -28,17 +30,23 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
       {/* 图片区域 */}
       <div
         data-testid="card-image-area"
-        className="relative aspect-[4/3] bg-gray-50 overflow-hidden"
+        className="relative aspect-[4/3] bg-gray-100 overflow-hidden"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <Link href={`/chairs/${chair.id}`} tabIndex={-1}>
-          <Image
-            src={chair.imageUrl || placeholder}
-            alt={chair.name}
-            fill
-            className="object-cover transition-transform duration-300 hover:scale-105"
-          />
+        <Link href={`/chairs/${chair.id}`} tabIndex={-1} className="absolute inset-0">
+          {chair.imageUrl ? (
+            <Image
+              src={chair.imageUrl}
+              alt={chair.name}
+              fill
+              className="object-cover transition-transform duration-300 hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Armchair className="w-16 h-16 text-gray-300" strokeWidth={1} />
+            </div>
+          )}
         </Link>
 
         {/* Badge（TOP PICK / SALE） */}
@@ -52,18 +60,18 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
         {/* Hover 遮罩 */}
         {hovered && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
             {isInCompare ? (
               <button
                 onClick={(e) => { e.preventDefault(); onRemove(chair.id) }}
-                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-700 transition-colors"
               >
                 ✓ 移出对比
               </button>
             ) : (
               <button
                 onClick={(e) => { e.preventDefault(); onAdd(chair.id) }}
-                className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-700 transition-colors"
               >
                 + 加入对比
               </button>
@@ -74,8 +82,13 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
       {/* 卡片内容区 */}
       <div className="p-4">
-        <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-1">
+        <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-0.5">
           {chair.name}
+        </p>
+
+        {/* 次级信息：材质 · 颜色 */}
+        <p className="text-xs text-gray-400 mb-2">
+          {capitalize(chair.material)} · {capitalize(chair.color)}
         </p>
 
         {/* 已加入对比常驻指示 */}
@@ -84,7 +97,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
         )}
 
         {/* 价格区域 */}
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-1">
           <div className="flex items-baseline gap-2">
             <span className="text-base font-semibold text-gray-900">
               ${chair.price.toFixed(2)}
@@ -97,7 +110,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
           </div>
           <Link
             href={`/chairs/${chair.id}`}
-            className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+            className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
           >
             Details →
           </Link>

@@ -19,9 +19,9 @@ describe('CompareFAB', () => {
     expect(screen.getByText('1')).toBeInTheDocument()
   })
 
-  it('shows chair list on hover', async () => {
+  it('shows chair list on click', async () => {
     render(<CompareFAB compareIds={['c001', 'c002']} chairs={chairs} onRemove={vi.fn()} />)
-    await userEvent.hover(screen.getByRole('button', { name: /对比/i }))
+    await userEvent.click(screen.getByRole('button', { name: /对比/i }))
     expect(screen.getByText('Chair Alpha')).toBeInTheDocument()
     expect(screen.getByText('Chair Beta')).toBeInTheDocument()
   })
@@ -29,17 +29,17 @@ describe('CompareFAB', () => {
   it('calls onRemove when × clicked in preview list', async () => {
     const onRemove = vi.fn()
     render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={onRemove} />)
-    await userEvent.hover(screen.getByRole('button', { name: /对比/i }))
+    await userEvent.click(screen.getByRole('button', { name: /对比/i }))
     await userEvent.click(screen.getByLabelText('移除 Chair Alpha'))
     expect(onRemove).toHaveBeenCalledWith('c001')
   })
 
-  it('hides preview list when mouse leaves', async () => {
+  it('hides preview list when button clicked again', async () => {
     render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} />)
     const fab = screen.getByRole('button', { name: /对比/i })
-    await userEvent.hover(fab)
+    await userEvent.click(fab)
     expect(screen.getByText('Chair Alpha')).toBeInTheDocument()
-    await userEvent.unhover(fab)
+    await userEvent.click(fab)
     expect(screen.queryByText('Chair Alpha')).not.toBeInTheDocument()
   })
 })

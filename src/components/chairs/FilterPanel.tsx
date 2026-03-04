@@ -81,9 +81,9 @@ export function FilterPanel() {
         )}
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-0">
         {/* 价格 */}
-        <div>
+        <div className="py-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-700">Price Range</span>
             {(filter.priceMin > absMin || filter.priceMax < absMax) && (
@@ -100,8 +100,10 @@ export function FilterPanel() {
           />
         </div>
 
+        <hr className="border-gray-100" />
+
         {/* 材质 */}
-        <div>
+        <div className="py-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Material</span>
             {filter.materials.length > 0 && (
@@ -125,8 +127,10 @@ export function FilterPanel() {
           </div>
         </div>
 
+        <hr className="border-gray-100" />
+
         {/* 颜色 */}
-        <div>
+        <div className="py-5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">Color</span>
             {filter.colors.length > 0 && (
@@ -144,8 +148,8 @@ export function FilterPanel() {
                 onClick={() => toggleColor(c.id)}
                 className={`w-8 h-8 rounded-full border-2 transition-all ${
                   filter.colors.includes(c.id)
-                    ? 'border-gray-900 scale-110'
-                    : 'border-transparent hover:border-gray-400'
+                    ? 'border-white ring-2 ring-gray-900'
+                    : 'border-transparent hover:border-gray-300'
                 }`}
                 style={{ backgroundColor: c.rgb }}
                 title={c.name}
@@ -155,15 +159,24 @@ export function FilterPanel() {
         </div>
 
         {/* 头枕 / 腰靠 / 腰靠可调节 */}
-        <TriStateGroup label="Headrest" value={filter.headrest}
-          onChange={(v) => setFilter({ ...filter, headrest: v })}
-          onClear={() => setFilter({ ...filter, headrest: 'all' })} />
-        <TriStateGroup label="Lumbar Support" value={filter.lumbar}
-          onChange={(v) => setFilter({ ...filter, lumbar: v })}
-          onClear={() => setFilter({ ...filter, lumbar: 'all' })} />
-        <TriStateGroup label="Adjustable" value={filter.lumbarAdjustable}
-          onChange={(v) => setFilter({ ...filter, lumbarAdjustable: v })}
-          onClear={() => setFilter({ ...filter, lumbarAdjustable: 'all' })} />
+        <hr className="border-gray-100" />
+        <div className="py-5">
+          <TriStateGroup label="Headrest" value={filter.headrest}
+            onChange={(v) => setFilter({ ...filter, headrest: v })}
+            onClear={() => setFilter({ ...filter, headrest: 'all' })} />
+        </div>
+        <hr className="border-gray-100" />
+        <div className="py-5">
+          <TriStateGroup label="Lumbar Support" value={filter.lumbar}
+            onChange={(v) => setFilter({ ...filter, lumbar: v })}
+            onClear={() => setFilter({ ...filter, lumbar: 'all' })} />
+        </div>
+        <hr className="border-gray-100" />
+        <div className="py-5">
+          <TriStateGroup label="Adjustable" value={filter.lumbarAdjustable}
+            onChange={(v) => setFilter({ ...filter, lumbarAdjustable: v })}
+            onClear={() => setFilter({ ...filter, lumbarAdjustable: 'all' })} />
+        </div>
       </div>
     </aside>
   )

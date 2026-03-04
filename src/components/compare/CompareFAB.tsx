@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function CompareFAB({ compareIds, chairs, onRemove }: Props) {
-  const [hovered, setHovered] = useState(false)
+  const [open, setOpen] = useState(false)
 
   if (compareIds.length === 0) return null
 
@@ -18,15 +18,11 @@ export function CompareFAB({ compareIds, chairs, onRemove }: Props) {
     .filter(Boolean) as Chair[]
 
   return (
-    <div
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {hovered && (
-        <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-60">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      {open && (
+        <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-64">
           <p className="text-xs text-gray-500 font-medium mb-2">对比列表</p>
-          <ul className="space-y-2">
+          <ul className="space-y-2 max-h-[180px] overflow-y-auto">
             {compareChairs.map((chair) => (
               <li key={chair.id} className="flex items-center justify-between gap-2">
                 <span className="text-sm text-gray-800 truncate">{chair.name}</span>
@@ -45,7 +41,7 @@ export function CompareFAB({ compareIds, chairs, onRemove }: Props) {
 
       <button
         aria-label={`对比 (${compareIds.length})`}
-        onClick={() => window.open('/compare', '_blank')}
+        onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors font-medium text-sm"
       >
         <span>⚖</span>
