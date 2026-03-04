@@ -47,5 +47,5 @@ next-env.d.ts
 qa-chairs-*.png
 
 # design assets (local only)
-docs/assets/prototype-code/
-docs/assets/*.zip
+docs/assets/
+docs/plans/
