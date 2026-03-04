@@ -16,16 +16,14 @@
     { "id": "black",  "name": "黑色", "rgb": "#1a1a1a" },
     { "id": "white",  "name": "白色", "rgb": "#f0ede8" },
     { "id": "gray",   "name": "灰色", "rgb": "#8c8c8c" },
-    { "id": "brown",  "name": "棕色", "rgb": "#7c5c3e" },
-    { "id": "blue",   "name": "蓝色", "rgb": "#4a7fa5" },
-    { "id": "orange", "name": "橙色", "rgb": "#d4703a" }
+    { "id": "beige",  "name": "米色", "rgb": "#e8dcc8" }
   ],
   "chairs": [
     {
       "id": "c001",
       "name": "ErgoMaster Pro Series Mesh Chair",
       "price": 399,
-      "imageUrl": "",
+      "imageUrl": "https://static2.flymee.jp/product_images/af4d-30406/202301231128557113.jpg",
       "material": "mesh",
       "color": "black",
       "hasHeadrest": false,
