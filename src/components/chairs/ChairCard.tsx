@@ -82,7 +82,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
       {/* 卡片内容区 */}
       <div className={`p-4 ${isInCompare ? 'bg-gray-50' : ''}`}>
-        <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-0.5">
+        <p className="text-sm font-medium text-gray-900 line-clamp-3 leading-snug min-h-[3.75rem] mb-0.5">
           {chair.name}
         </p>
 
