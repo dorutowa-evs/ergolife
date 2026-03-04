@@ -21,8 +21,8 @@
   "chairs": [
     {
       "id": "c001",
-      "name": "ErgoMaster Pro Series Mesh Chair",
-      "price": 399,
+      "name": "Herman Miller Aeron Chair",
+      "price": 1999,
       "imageUrl": "https://static2.flymee.jp/product_images/af4d-30406/202301231128557113.jpg",
       "material": "mesh",
       "color": "black",
