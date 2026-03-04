@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude code
+.claude/
+
+# qa screenshots
+qa-chairs-*.png
+
+# design assets (local only)
+docs/assets/prototype-code/
+docs/assets/*.zip
