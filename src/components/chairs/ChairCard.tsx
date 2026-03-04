@@ -91,11 +91,6 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
           {capitalize(chair.material)} · {capitalize(chair.color)}
         </p>
 
-        {/* 已加入对比常驻指示 */}
-        {isInCompare && (
-          <p className="text-xs text-gray-500 mb-2">✓ 已加入对比</p>
-        )}
-
         {/* 价格区域 */}
         <div className="flex items-center justify-between mt-1">
           <div className="flex items-baseline gap-2">
