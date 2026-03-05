@@ -29,6 +29,8 @@ export interface Chair {
   name: string
   price: number
   imageUrl: string
+  // 产品图比例不统一：宽图用 cover 撑满，高图/全身图用 contain 避免裁剪
+  imageFit?: 'cover' | 'contain'
   material: string        // 对应 Material.id
   color: string           // 对应 Color.id
   hasHeadrest: boolean

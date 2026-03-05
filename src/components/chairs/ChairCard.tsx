@@ -40,7 +40,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
               src={chair.imageUrl}
               alt={chair.name}
               fill
-              className="object-cover transition-transform duration-300 hover:scale-105"
+              className={`${chair.imageFit === 'contain' ? 'object-contain p-3' : 'object-cover'} transition-transform duration-300 hover:scale-105`}
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
