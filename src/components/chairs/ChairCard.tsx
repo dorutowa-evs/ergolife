@@ -24,13 +24,13 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div className={`rounded-xl overflow-hidden border transition-all bg-white shadow-sm hover:shadow-md ${
-      isInCompare ? 'border-gray-900 border-2' : 'border-gray-100 hover:border-gray-200'
+    <div className={`rounded-xl overflow-hidden border-2 transition-all bg-white shadow-sm hover:shadow-md ${
+      isInCompare ? 'border-gray-900' : 'border-transparent hover:border-gray-200'
     }`}>
       {/* 图片区域 */}
       <div
         data-testid="card-image-area"
-        className="relative aspect-[4/3] bg-gray-100 overflow-hidden"
+        className={`relative aspect-[4/3] overflow-hidden ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
