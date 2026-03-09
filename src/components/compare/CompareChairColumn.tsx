@@ -18,11 +18,12 @@ export function CompareChairColumn({ chair, isFirst, isLast, onMoveLeft, onMoveR
 
   return (
     <div
-      className="relative w-52 shrink-0 px-4 pt-4 pb-3"
+      className="relative w-52 shrink-0 px-4 pt-5 pb-4"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="h-40 w-full relative rounded-lg overflow-hidden bg-gray-50 mb-3">
+      {/* Image */}
+      <div className="h-36 w-full relative rounded-lg overflow-hidden bg-gray-50 mb-4">
         {chair.imageUrl ? (
           <Image
             src={chair.imageUrl}
@@ -37,36 +38,40 @@ export function CompareChairColumn({ chair, isFirst, isLast, onMoveLeft, onMoveR
         )}
       </div>
 
-      <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug mb-2">{chair.name}</p>
+      {/* Name */}
+      <p className="text-[15px] font-semibold text-gray-900 line-clamp-2 leading-snug mb-3">
+        {chair.name}
+      </p>
 
-      {/* Remove button */}
-      <button
-        aria-label={`移除 ${chair.name}`}
-        onClick={() => onRemove(chair.id)}
-        className={`absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all text-xs ${
-          hovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        ×
-      </button>
+      {/* Controls — visible on hover */}
+      <div className={`flex items-center justify-between transition-opacity ${hovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        {/* ← → reorder */}
+        <div className="flex gap-1">
+          <button
+            aria-label="左移"
+            onClick={onMoveLeft}
+            disabled={isFirst}
+            className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            aria-label="右移"
+            onClick={onMoveRight}
+            disabled={isLast}
+            className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
 
-      {/* Left / right reorder buttons */}
-      <div className={`flex justify-between gap-1 transition-opacity ${hovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        {/* Remove */}
         <button
-          aria-label="左移"
-          onClick={onMoveLeft}
-          disabled={isFirst}
-          className="flex-1 flex items-center justify-center h-7 rounded-md bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          aria-label={`移除 ${chair.name}`}
+          onClick={() => onRemove(chair.id)}
+          className="text-xs text-gray-400 hover:text-red-500 transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <button
-          aria-label="右移"
-          onClick={onMoveRight}
-          disabled={isLast}
-          className="flex-1 flex items-center justify-center h-7 rounded-md bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          <ChevronRight className="w-4 h-4" />
+          移除
         </button>
       </div>
     </div>

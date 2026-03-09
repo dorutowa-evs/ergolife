@@ -20,12 +20,12 @@ export default function ComparePage() {
     .filter((c): c is Chair => c !== undefined)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-6 pt-8 pb-16">
         {/* Back link */}
         <Link
           href="/chairs"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           返回
@@ -34,17 +34,20 @@ export default function ComparePage() {
         {compareChairs.length === 0 ? (
           <CompareEmptyState />
         ) : (
-          <CompareTable
-            chairs={compareChairs}
-            allChairs={allChairs}
-            compareIds={compareList}
-            materials={materials}
-            colors={colors}
-            isFull={isFull}
-            onRemove={removeFromCompare}
-            onReorder={reorderCompare}
-            onAdd={addToCompare}
-          />
+          <>
+            <h1 className="text-2xl font-medium text-gray-900 text-center mt-8 mb-10">椅子对比</h1>
+              <CompareTable
+              chairs={compareChairs}
+              allChairs={allChairs}
+              compareIds={compareList}
+              materials={materials}
+              colors={colors}
+              isFull={isFull}
+              onRemove={removeFromCompare}
+              onReorder={reorderCompare}
+              onAdd={addToCompare}
+            />
+          </>
         )}
       </div>
     </div>

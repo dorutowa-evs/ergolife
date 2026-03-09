@@ -13,7 +13,7 @@ const PARAMS: {
   {
     label: '价格',
     getValue: (c) => (
-      <span className="text-xl font-bold text-gray-900">{formatPrice(c.price)}</span>
+      <span className="text-xl font-semibold text-gray-900">{formatPrice(c.price)}</span>
     ),
   },
   { label: '材质', getValue: (c, m) => formatValue(formatMaterialLabel(c.material, m)) },
@@ -22,6 +22,13 @@ const PARAMS: {
   { label: '腰靠', getValue: (c) => formatBool(c.hasLumbar) },
   { label: '腰靠可调节', getValue: (c) => formatBool(c.isLumbarAdjustable) },
 ]
+
+// Label column width — shared between header spacer, section row, and param rows
+const LABEL_W = 'w-56'
+// Chair column width — shared between header cells and param cells
+const CHAIR_W = 'w-52'
+// Add column width
+const ADD_W = 'w-44'
 
 interface Props {
   chairs: Chair[]
@@ -68,15 +75,16 @@ export function CompareTable({
 
   return (
     <>
-      <div className="overflow-x-auto pb-4">
+      <div className="overflow-x-auto">
         <div className="min-w-max">
-          {/* Sticky header row */}
+
+          {/* ── Sticky header row ── */}
           <div
             className={`sticky top-0 z-20 bg-white flex transition-shadow ${
-              scrolled ? 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08)]' : ''
+              scrolled ? 'border-b border-gray-200' : ''
             }`}
           >
-            <div className="w-40 shrink-0" />
+            <div className={`${LABEL_W} shrink-0`} />
             {chairs.map((chair, i) => (
               <CompareChairColumn
                 key={chair.id}
@@ -89,42 +97,54 @@ export function CompareTable({
               />
             ))}
             {!isFull && (
-              <div className="w-44 shrink-0 flex items-center justify-center px-3 py-4">
+              <div className={`${ADD_W} shrink-0 flex items-end px-4 pb-5`}>
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="flex flex-col items-center justify-center w-full h-full min-h-[196px] rounded-xl border-2 border-dashed border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors gap-2"
+                  className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
                 >
-                  <Plus className="w-6 h-6" />
-                  <span className="text-sm">添加商品</span>
+                  <Plus className="w-4 h-4" />
+                  添加商品
                 </button>
               </div>
             )}
           </div>
 
-          {/* Parameter rows */}
+          {/* ── Section header ── */}
+          <div className="flex bg-gray-50 border-t border-b border-gray-100">
+            <div className={`${LABEL_W} shrink-0 px-6 py-3`}>
+              <span className="text-sm font-medium text-gray-600">基础参数</span>
+            </div>
+            {chairs.map((chair) => (
+              <div key={chair.id} className={`${CHAIR_W} shrink-0`} />
+            ))}
+            {!isFull && <div className={`${ADD_W} shrink-0`} />}
+          </div>
+
+          {/* ── Parameter rows ── */}
           {PARAMS.map((param, i) => (
             <div
               key={param.label}
-              className={`flex border-t border-gray-100 transition-colors ${
-                hoveredRow === i ? 'bg-gray-50' : ''
+              className={`flex border-b border-gray-100 transition-colors ${
+                hoveredRow === i ? 'bg-gray-50' : 'bg-white'
               }`}
               onMouseEnter={() => setHoveredRow(i)}
               onMouseLeave={() => setHoveredRow(null)}
             >
-              <div className="w-40 shrink-0 px-4 py-3 text-xs font-medium text-gray-400 flex items-center">
+              <div className={`${LABEL_W} shrink-0 px-6 py-5 text-sm text-gray-500 flex items-center`}>
                 {param.label}
               </div>
               {chairs.map((chair) => (
                 <div
                   key={chair.id}
-                  className="w-52 shrink-0 px-4 py-3 text-sm text-gray-800 flex items-center"
+                  className={`${CHAIR_W} shrink-0 px-4 py-5 text-sm text-gray-800 flex items-center`}
                 >
                   {param.getValue(chair, materials, colors)}
                 </div>
               ))}
-              {!isFull && <div className="w-44 shrink-0" />}
+              {!isFull && <div className={`${ADD_W} shrink-0`} />}
             </div>
           ))}
+
         </div>
       </div>
 
