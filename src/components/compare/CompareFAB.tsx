@@ -55,8 +55,6 @@ export function CompareFAB({ compareIds, chairs, onRemove, onClearAll }: Props) 
 
       <Link
         href="/compare"
-        target="_blank"
-        rel="noopener noreferrer"
         aria-label={`对比 (${compareIds.length})`}
         className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors font-medium text-sm"
       >

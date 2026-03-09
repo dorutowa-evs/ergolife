@@ -23,7 +23,7 @@ describe('CompareFAB', () => {
     render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
     const link = screen.getByRole('link', { name: /对比/ })
     expect(link).toHaveAttribute('href', '/compare')
-    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).not.toHaveAttribute('target')
   })
 
   it('shows chair list on hover', async () => {
