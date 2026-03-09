@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, renderHook, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CompareProvider, useCompare } from '../CompareContext'
 
@@ -61,5 +61,16 @@ describe('CompareContext', () => {
     await screen.findByText('5', { selector: '[data-testid="count"]' })
     await userEvent.click(screen.getByText('add-a'))
     expect(screen.getByTestId('count').textContent).toBe('5')
+  })
+
+  it('reorderCompare swaps two items', () => {
+    const { result } = renderHook(() => useCompare(), { wrapper: CompareProvider })
+    act(() => result.current.addToCompare('c001'))
+    act(() => result.current.addToCompare('c002'))
+    act(() => result.current.addToCompare('c003'))
+
+    act(() => result.current.reorderCompare(['c003', 'c001', 'c002']))
+
+    expect(result.current.compareList).toEqual(['c003', 'c001', 'c002'])
   })
 })

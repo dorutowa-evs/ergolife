@@ -8,8 +8,10 @@ interface CompareContextValue {
   compareList: string[]
   addToCompare: (id: string) => void
   removeFromCompare: (id: string) => void
+  clearAll: () => void
   isInCompare: (id: string) => boolean
   isFull: boolean
+  reorderCompare: (newOrder: string[]) => void
 }
 
 const CompareContext = createContext<CompareContextValue | null>(null)
@@ -26,11 +28,15 @@ export function CompareProvider({ children }: { children: ReactNode }) {
   const removeFromCompare = (id: string) =>
     setCompareList(compareList.filter((i) => i !== id))
 
+  const clearAll = () => setCompareList([])
+
+  const reorderCompare = (newOrder: string[]) => setCompareList(newOrder)
+
   const isInCompare = (id: string) => compareList.includes(id)
   const isFull = compareList.length >= MAX_COMPARE
 
   return (
-    <CompareContext.Provider value={{ compareList, addToCompare, removeFromCompare, isInCompare, isFull }}>
+    <CompareContext.Provider value={{ compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull, reorderCompare }}>
       {children}
     </CompareContext.Provider>
   )
