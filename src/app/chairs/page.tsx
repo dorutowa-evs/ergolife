@@ -1,12 +1,12 @@
 'use client'
-import { useMemo, useEffect, useRef, useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { useMemo, useEffect } from 'react'
 import { useFilter } from '@/contexts/FilterContext'
 import { useCompare } from '@/contexts/CompareContext'
 import { useToast } from '@/hooks/useToast'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { FilterPanel } from '@/components/chairs/FilterPanel'
 import { ChairCard } from '@/components/chairs/ChairCard'
+import { SortDropdown } from '@/components/chairs/SortDropdown'
 import { CompareFAB } from '@/components/compare/CompareFAB'
 import { Pagination } from '@/components/ui/Pagination'
 import { Header } from '@/components/layout/Header'
@@ -26,22 +26,10 @@ const SORT_OPTIONS: { value: SortOrder; label: string }[] = [
 
 export default function ChairsPage() {
   const { filter } = useFilter()
-  const { compareList, addToCompare, removeFromCompare, isInCompare, isFull } = useCompare()
+  const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
   const { showToast } = useToast()
   const [sortOrder, setSortOrder] = useLocalStorage<SortOrder>('chair-sort', 'default')
   const [page, setPage] = useLocalStorage<number>('chair-page', 1)
-  const [sortOpen, setSortOpen] = useState(false)
-  const sortRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
-        setSortOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
 
   const filtered = useMemo(
     () => filterChairs(allChairs, filter, sortOrder),
@@ -95,32 +83,11 @@ export default function ChairsPage() {
               <span className="font-semibold text-gray-900">{filtered.length}</span>{' '}
               results
             </p>
-            <div ref={sortRef} className="relative">
-              <button
-                onClick={() => setSortOpen((prev) => !prev)}
-                className="flex items-center gap-2 text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                <span>{SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ?? '默认排序'}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${sortOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {sortOpen && (
-                <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-                  {SORT_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => { handleSortChange(opt.value); setSortOpen(false) }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                        opt.value === sortOrder
-                          ? 'bg-gray-50 text-gray-900 font-medium'
-                          : 'text-gray-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <SortDropdown
+              options={SORT_OPTIONS}
+              value={sortOrder}
+              onChange={handleSortChange}
+            />
           </div>
 
           {/* 卡片网格 or 空状态 */}
@@ -160,6 +127,7 @@ export default function ChairsPage() {
         compareIds={compareList}
         chairs={allChairs}
         onRemove={removeFromCompare}
+        onClearAll={clearAll}
       />
     </div>
   )

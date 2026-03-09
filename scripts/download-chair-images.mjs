@@ -22,7 +22,6 @@ const images = [
   { file: 'knoll-generation.jpg',   url: 'https://static2.flymee.jp/product_images/b550-115661/202312121724062463.jpg' },
   { file: 'haworth-fern.png',       url: 'https://floydhome.com/cdn/shop/files/Fern_Floyd_REd-Blue_Sisu_Front34_FNL-removebg_2655x.png?v=1695398112' },
   { file: 'secretlab-titan-evo.jpg',url: 'https://m.media-amazon.com/images/I/51ia8cmW4KL.jpg' },
-  { file: 'ikea-markus.jpg',        url: 'https://www.ikea.com/jp/en/images/products/markus-office-chair-vissle-dark-grey__0724714_pe734597_s5.jpg' },
   { file: 'sihoo-m57.jpg',          url: 'https://sihoooffice.co.jp/cdn/shop/files/img_v3_02u7_aeff4c06-3c61-48e1-9de4-761f17c23deg.jpg?v=1769151470&width=603' },
   { file: 'flexispot-c7.png',       url: 'https://s3.springbeetle.eu/dev-de-s3-flexispot/commodity/item/1028_file_c7-png-250715-3.png' },
   { file: 'razer-iskur.jpg',        url: 'https://m.media-amazon.com/images/I/712puRvM3XL.jpg' },

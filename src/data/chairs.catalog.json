@@ -41,8 +41,8 @@
       "color": "black",
       "hasHeadrest": true,
       "hasLumbar": true,
-      "isLumbarAdjustable": false,
-      "description": "Premium bonded leather with a high-back design for executive presence."
+      "isLumbarAdjustable": true,
+      "description": "High-back full-mesh design with adjustable headrest and breathable back for all-day comfort."
     },
     {
       "id": "c003",
@@ -129,7 +129,6 @@
       "name": "Branch Ergonomic Chair",
       "price": 329,
       "imageUrl": "/images/chairs/branch.jpg",
-      "imageFit": "contain",
       "material": "mesh",
       "color": "gray",
       "hasHeadrest": false,
@@ -177,18 +176,6 @@
     },
     {
       "id": "c013",
-      "name": "IKEA Markus",
-      "price": 229,
-      "imageUrl": "https://www.ikea.com/us/en/images/products/markus-office-chair-vissle-dark-gray__0724714_pe734597_s5.jpg?f=u",
-      "material": "mesh",
-      "color": "black",
-      "hasHeadrest": false,
-      "hasLumbar": true,
-      "isLumbarAdjustable": false,
-      "description": "The budget-friendly ergonomic classic with built-in lumbar support trusted by millions worldwide."
-    },
-    {
-      "id": "c014",
       "name": "Sihoo M57",
       "price": 249,
       "imageUrl": "/images/chairs/sihoo-m57.jpg",
@@ -201,7 +188,7 @@
       "description": "Triple-zone breathable mesh back with adjustable headrest, 3D armrests, and dual lumbar support."
     },
     {
-      "id": "c015",
+      "id": "c014",
       "name": "Flexispot C7",
       "price": 349,
       "imageUrl": "/images/chairs/flexispot-c7.png",
@@ -214,7 +201,7 @@
       "description": "Premium mesh with 3D flexible back, adjustable lumbar, and 4D armrests at a mid-range price."
     },
     {
-      "id": "c016",
+      "id": "c015",
       "name": "Razer Iskur",
       "price": 399,
       "imageUrl": "/images/chairs/razer-iskur.jpg",
@@ -229,7 +216,7 @@
       "description": "Built-for-gamers ergonomics with multi-layer synthetic leather and fully adjustable lumbar curve."
     },
     {
-      "id": "c017",
+      "id": "c016",
       "name": "Ticova Ergonomic Chair",
       "price": 199,
       "imageUrl": "/images/chairs/ticova.jpg",
@@ -242,7 +229,7 @@
       "description": "S-shaped lumbar support system with 11 adjustability points, ideal for varied body types."
     },
     {
-      "id": "c018",
+      "id": "c017",
       "name": "OdinLake Nuova L1",
       "price": 289,
       "imageUrl": "/images/chairs/odinlake-l1.jpg",
@@ -255,7 +242,7 @@
       "description": "WireControl lumbar system and FlexBreath mesh rated for 15 years of daily use at 8+ hours."
     },
     {
-      "id": "c019",
+      "id": "c018",
       "name": "Duramont Ergonomic Chair",
       "price": 239,
       "imageUrl": "/images/chairs/duramont.jpg",

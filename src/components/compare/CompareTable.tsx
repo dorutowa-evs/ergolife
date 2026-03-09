@@ -1,22 +1,5 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type DragStartEvent,
-  type DragOverEvent,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  horizontalListSortingStrategy,
-  arrayMove,
-} from '@dnd-kit/sortable'
+import { useState, useEffect } from 'react'
 import { Plus } from 'lucide-react'
 import { CompareChairColumn } from './CompareChairColumn'
 import { AddChairModal } from './AddChairModal'
@@ -66,8 +49,6 @@ export function CompareTable({
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const [overId, setOverId] = useState<string | null>(null)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8)
@@ -75,110 +56,77 @@ export function CompareTable({
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Preview order during drag — param rows render from this
-  const displayChairs = useMemo(() => {
-    if (!activeId || !overId || activeId === overId) return chairs
-    const oldIndex = chairs.findIndex((c) => c.id === activeId)
-    const newIndex = chairs.findIndex((c) => c.id === overId)
-    if (oldIndex === -1 || newIndex === -1) return chairs
-    return arrayMove(chairs, oldIndex, newIndex)
-  }, [chairs, activeId, overId])
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
-
-  function handleDragStart(event: DragStartEvent) {
-    setActiveId(String(event.active.id))
-    setOverId(String(event.active.id))
-  }
-
-  function handleDragOver(event: DragOverEvent) {
-    setOverId(event.over ? String(event.over.id) : null)
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    setActiveId(null)
-    setOverId(null)
-    const { active, over } = event
-    if (!over || active.id === over.id) return
-    const validIds = chairs.map((c) => c.id)
-    const oldIndex = validIds.indexOf(String(active.id))
-    const newIndex = validIds.indexOf(String(over.id))
-    if (oldIndex === -1 || newIndex === -1) return
-    onReorder(
-      arrayMove(
-        compareIds,
-        compareIds.indexOf(String(active.id)),
-        compareIds.indexOf(String(over.id))
-      )
-    )
+  function handleMove(id: string, direction: 'left' | 'right') {
+    const idx = compareIds.indexOf(id)
+    if (idx === -1) return
+    const next = direction === 'left' ? idx - 1 : idx + 1
+    if (next < 0 || next >= compareIds.length) return
+    const newOrder = [...compareIds]
+    ;[newOrder[idx], newOrder[next]] = [newOrder[next], newOrder[idx]]
+    onReorder(newOrder)
   }
 
   return (
     <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="overflow-x-auto pb-4">
-          <div className="min-w-max">
-            {/* Sticky header row */}
-            <div
-              className={`sticky top-0 z-20 bg-white flex transition-shadow ${
-                scrolled ? 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08)]' : ''
-              }`}
-            >
-              <div className="w-40 shrink-0" />
-              <SortableContext items={compareIds} strategy={horizontalListSortingStrategy}>
-                {chairs.map((chair) => (
-                  <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
-                ))}
-              </SortableContext>
-              {!isFull && (
-                <div className="w-44 shrink-0 flex items-center justify-center px-3 py-4">
-                  <button
-                    onClick={() => setModalOpen(true)}
-                    className="flex flex-col items-center justify-center w-full h-full min-h-[196px] rounded-xl border-2 border-dashed border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors gap-2"
-                  >
-                    <Plus className="w-6 h-6" />
-                    <span className="text-sm">添加商品</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Parameter rows — rendered from displayChairs for live drag preview */}
-            {PARAMS.map((param, i) => (
-              <div
-                key={param.label}
-                className={`flex border-t border-gray-100 transition-colors ${
-                  hoveredRow === i ? 'bg-gray-50' : ''
-                }`}
-                onMouseEnter={() => setHoveredRow(i)}
-                onMouseLeave={() => setHoveredRow(null)}
-              >
-                <div className="w-40 shrink-0 px-4 py-3 text-xs font-medium text-gray-400 flex items-center">
-                  {param.label}
-                </div>
-                {displayChairs.map((chair) => (
-                  <div
-                    key={chair.id}
-                    className="w-52 shrink-0 px-4 py-3 text-sm text-gray-800 flex items-center"
-                  >
-                    {param.getValue(chair, materials, colors)}
-                  </div>
-                ))}
-                {!isFull && <div className="w-44 shrink-0" />}
-              </div>
+      <div className="overflow-x-auto pb-4">
+        <div className="min-w-max">
+          {/* Sticky header row */}
+          <div
+            className={`sticky top-0 z-20 bg-white flex transition-shadow ${
+              scrolled ? 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08)]' : ''
+            }`}
+          >
+            <div className="w-40 shrink-0" />
+            {chairs.map((chair, i) => (
+              <CompareChairColumn
+                key={chair.id}
+                chair={chair}
+                isFirst={i === 0}
+                isLast={i === chairs.length - 1}
+                onMoveLeft={() => handleMove(chair.id, 'left')}
+                onMoveRight={() => handleMove(chair.id, 'right')}
+                onRemove={onRemove}
+              />
             ))}
+            {!isFull && (
+              <div className="w-44 shrink-0 flex items-center justify-center px-3 py-4">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="flex flex-col items-center justify-center w-full h-full min-h-[196px] rounded-xl border-2 border-dashed border-gray-200 text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-colors gap-2"
+                >
+                  <Plus className="w-6 h-6" />
+                  <span className="text-sm">添加商品</span>
+                </button>
+              </div>
+            )}
           </div>
+
+          {/* Parameter rows */}
+          {PARAMS.map((param, i) => (
+            <div
+              key={param.label}
+              className={`flex border-t border-gray-100 transition-colors ${
+                hoveredRow === i ? 'bg-gray-50' : ''
+              }`}
+              onMouseEnter={() => setHoveredRow(i)}
+              onMouseLeave={() => setHoveredRow(null)}
+            >
+              <div className="w-40 shrink-0 px-4 py-3 text-xs font-medium text-gray-400 flex items-center">
+                {param.label}
+              </div>
+              {chairs.map((chair) => (
+                <div
+                  key={chair.id}
+                  className="w-52 shrink-0 px-4 py-3 text-sm text-gray-800 flex items-center"
+                >
+                  {param.getValue(chair, materials, colors)}
+                </div>
+              ))}
+              {!isFull && <div className="w-44 shrink-0" />}
+            </div>
+          ))}
         </div>
-      </DndContext>
+      </div>
 
       <AddChairModal
         open={modalOpen}
