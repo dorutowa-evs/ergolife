@@ -1,3 +1,0 @@
-[    1240ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ https://cdn-stamped-io.azureedge.net/files/widget.min.js:0
-[    1638ms] [WARNING] Warning: affirm.js may not work properly due to the follow issue: Third Party Cookies not available @ https://browser.sentry-cdn.com/7.21.1/bundle.tracing.min.js:1
-[    1682ms] [WARNING] Swiper Loop Warning: The number of slides is not enough for loop mode, it will be disabled or not function properly. You need to add more slides (or make duplicates) or lower the values of slidesPerView and slidesPerGroup parameters @ https://browser.sentry-cdn.com/7.21.1/bundle.tracing.min.js:1
