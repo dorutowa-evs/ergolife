@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react'
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core'
 import {
   SortableContext,
@@ -15,7 +17,8 @@ import {
   horizontalListSortingStrategy,
   arrayMove,
 } from '@dnd-kit/sortable'
-import { Plus } from 'lucide-react'
+import { Plus, Armchair } from 'lucide-react'
+import Image from 'next/image'
 import { CompareChairColumn } from './CompareChairColumn'
 import { AddChairModal } from './AddChairModal'
 import { formatPrice, formatMaterialLabel, formatBool, formatValue } from '@/lib/formatters'
@@ -64,6 +67,7 @@ export function CompareTable({
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8)
@@ -76,7 +80,12 @@ export function CompareTable({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id))
+  }
+
   function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null)
     const { active, over } = event
     if (!over || active.id === over.id) return
     const validIds = chairs.map((c) => c.id)
@@ -94,7 +103,7 @@ export function CompareTable({
 
   return (
     <>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="overflow-x-auto pb-4">
           <div className="min-w-max">
             {/* Sticky header row — image + name for each chair */}
@@ -156,6 +165,41 @@ export function CompareTable({
             ))}
           </div>
         </div>
+        {/* Drag overlay — full column ghost that follows the cursor */}
+        <DragOverlay dropAnimation={null}>
+          {activeId ? (() => {
+            const chair = chairs.find((c) => c.id === activeId)
+            if (!chair) return null
+            return (
+              <div className="w-52 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden opacity-95 cursor-grabbing">
+                {/* Header */}
+                <div className="px-4 pt-4 pb-3">
+                  <div className="h-40 w-full relative rounded-lg overflow-hidden bg-gray-50 mb-3">
+                    {chair.imageUrl ? (
+                      <Image
+                        src={chair.imageUrl}
+                        alt={chair.name}
+                        fill
+                        className={chair.imageFit === 'contain' ? 'object-contain p-2' : 'object-cover'}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Armchair className="w-10 h-10 text-gray-200" strokeWidth={1} />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-snug">{chair.name}</p>
+                </div>
+                {/* Param rows */}
+                {PARAMS.map((param) => (
+                  <div key={param.label} className="px-4 py-3 text-sm text-gray-800 border-t border-gray-100">
+                    {param.getValue(chair, materials, colors)}
+                  </div>
+                ))}
+              </div>
+            )
+          })() : null}
+        </DragOverlay>
       </DndContext>
 
       <AddChairModal

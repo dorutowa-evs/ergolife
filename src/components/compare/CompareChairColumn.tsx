@@ -19,7 +19,7 @@ export function CompareChairColumn({ chair, onRemove }: Props) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging ? 0 : 1,
   }
 
   return (
