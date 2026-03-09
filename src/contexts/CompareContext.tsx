@@ -30,7 +30,14 @@ export function CompareProvider({ children }: { children: ReactNode }) {
 
   const clearAll = () => setCompareList([])
 
-  const reorderCompare = (newOrder: string[]) => setCompareList(newOrder)
+  const reorderCompare = (newOrder: string[]) => {
+    const currentSet = new Set(compareList)
+    const isValidReorder =
+      newOrder.length === compareList.length &&
+      newOrder.every((id) => currentSet.has(id))
+    if (!isValidReorder) return
+    setCompareList(newOrder)
+  }
 
   const isInCompare = (id: string) => compareList.includes(id)
   const isFull = compareList.length >= MAX_COMPARE

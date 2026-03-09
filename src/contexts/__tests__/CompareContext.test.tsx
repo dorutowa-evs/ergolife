@@ -73,4 +73,24 @@ describe('CompareContext', () => {
 
     expect(result.current.compareList).toEqual(['c003', 'c001', 'c002'])
   })
+
+  it('reorderCompare is a no-op when newOrder contains foreign IDs', () => {
+    const { result } = renderHook(() => useCompare(), { wrapper: CompareProvider })
+    act(() => result.current.addToCompare('c001'))
+    act(() => result.current.addToCompare('c002'))
+
+    act(() => result.current.reorderCompare(['c001', 'c999']))
+
+    expect(result.current.compareList).toEqual(['c001', 'c002'])
+  })
+
+  it('reorderCompare is a no-op when newOrder length differs', () => {
+    const { result } = renderHook(() => useCompare(), { wrapper: CompareProvider })
+    act(() => result.current.addToCompare('c001'))
+    act(() => result.current.addToCompare('c002'))
+
+    act(() => result.current.reorderCompare(['c001', 'c002', 'c003']))
+
+    expect(result.current.compareList).toEqual(['c001', 'c002'])
+  })
 })
