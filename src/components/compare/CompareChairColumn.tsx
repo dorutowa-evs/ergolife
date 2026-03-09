@@ -82,7 +82,7 @@ export function CompareChairColumn({ chair, materials, colors, hoveredRow, onHov
           onPointerDown={(e) => e.stopPropagation()}
           onClick={() => onRemove(chair.id)}
           className={`absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all text-xs ${
-            headerHovered ? 'opacity-100' : 'opacity-0'
+            headerHovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
           ×
