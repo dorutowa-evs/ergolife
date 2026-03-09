@@ -20,7 +20,7 @@ describe('CompareFAB', () => {
   })
 
   it('renders a link to /compare that opens in a new tab', () => {
-    render(<CompareFAB compareIds={['c001']} chairs={[]} onRemove={vi.fn()} onClearAll={vi.fn()} />)
+    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
     const link = screen.getByRole('link', { name: /对比/ })
     expect(link).toHaveAttribute('href', '/compare')
     expect(link).toHaveAttribute('target', '_blank')
