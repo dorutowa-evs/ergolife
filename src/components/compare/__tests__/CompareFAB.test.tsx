@@ -10,36 +10,43 @@ const chairs: Chair[] = [
 
 describe('CompareFAB', () => {
   it('is hidden when compare list is empty', () => {
-    const { container } = render(<CompareFAB compareIds={[]} chairs={chairs} onRemove={vi.fn()} />)
+    const { container } = render(<CompareFAB compareIds={[]} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
     expect(container.firstChild).toBeNull()
   })
 
   it('shows count badge', () => {
-    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} />)
+    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
     expect(screen.getByText('1')).toBeInTheDocument()
   })
 
-  it('shows chair list on click', async () => {
-    render(<CompareFAB compareIds={['c001', 'c002']} chairs={chairs} onRemove={vi.fn()} />)
-    await userEvent.click(screen.getByRole('button', { name: /对比/i }))
+  it('renders a link to /compare that opens in a new tab', () => {
+    render(<CompareFAB compareIds={['c001']} chairs={[]} onRemove={vi.fn()} onClearAll={vi.fn()} />)
+    const link = screen.getByRole('link', { name: /对比/ })
+    expect(link).toHaveAttribute('href', '/compare')
+    expect(link).toHaveAttribute('target', '_blank')
+  })
+
+  it('shows chair list on hover', async () => {
+    render(<CompareFAB compareIds={['c001', 'c002']} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
+    await userEvent.hover(screen.getByRole('link', { name: /对比/i }))
     expect(screen.getByText('Chair Alpha')).toBeInTheDocument()
     expect(screen.getByText('Chair Beta')).toBeInTheDocument()
   })
 
   it('calls onRemove when × clicked in preview list', async () => {
     const onRemove = vi.fn()
-    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={onRemove} />)
-    await userEvent.click(screen.getByRole('button', { name: /对比/i }))
+    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={onRemove} onClearAll={vi.fn()} />)
+    await userEvent.hover(screen.getByRole('link', { name: /对比/i }))
     await userEvent.click(screen.getByLabelText('移除 Chair Alpha'))
     expect(onRemove).toHaveBeenCalledWith('c001')
   })
 
-  it('hides preview list when button clicked again', async () => {
-    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} />)
-    const fab = screen.getByRole('button', { name: /对比/i })
-    await userEvent.click(fab)
+  it('hides preview list on mouse leave', async () => {
+    render(<CompareFAB compareIds={['c001']} chairs={chairs} onRemove={vi.fn()} onClearAll={vi.fn()} />)
+    const container = screen.getByRole('link', { name: /对比/i }).closest('div')!
+    await userEvent.hover(screen.getByRole('link', { name: /对比/i }))
     expect(screen.getByText('Chair Alpha')).toBeInTheDocument()
-    await userEvent.click(fab)
+    await userEvent.unhover(container)
     expect(screen.queryByText('Chair Alpha')).not.toBeInTheDocument()
   })
 })
