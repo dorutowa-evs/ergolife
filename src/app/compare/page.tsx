@@ -6,6 +6,7 @@ import { useCompare } from '@/contexts/CompareContext'
 import { getChairs, getMaterials, getColors } from '@/lib/catalog'
 import { CompareEmptyState } from '@/components/compare/CompareEmptyState'
 import { CompareTable } from '@/components/compare/CompareTable'
+import type { Chair } from '@/types/catalog'
 
 const allChairs = getChairs()
 const materials = getMaterials()
@@ -16,7 +17,7 @@ export default function ComparePage() {
 
   const compareChairs = compareList
     .map((id) => allChairs.find((c) => c.id === id))
-    .filter(Boolean) as ReturnType<typeof getChairs>
+    .filter((c): c is Chair => c !== undefined)
 
   return (
     <div className="min-h-screen bg-gray-50">
