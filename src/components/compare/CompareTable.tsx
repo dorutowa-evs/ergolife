@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Armchair } from 'lucide-react'
 import { CompareChairColumn } from './CompareChairColumn'
 import { AddChairModal } from './AddChairModal'
 import { formatPrice, formatMaterialLabel, formatBool, formatValue } from '@/lib/formatters'
@@ -23,12 +23,8 @@ const PARAMS: {
   { label: '腰靠可调节', getValue: (c) => formatBool(c.isLumbarAdjustable) },
 ]
 
-// Label column width — shared between header spacer, section row, and param rows
 const LABEL_W = 'w-56'
-// Chair column width — shared between header cells and param cells
-const CHAIR_W = 'w-52'
-// Add column width
-const ADD_W = 'w-44'
+const COL_W   = 'w-52'   // shared by chair columns, add column, and param cells
 
 interface Props {
   chairs: Chair[]
@@ -50,7 +46,6 @@ export function CompareTable({
   colors,
   isFull,
   onRemove,
-  onReorder,
   onAdd,
 }: Props) {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
@@ -63,16 +58,6 @@ export function CompareTable({
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  function handleMove(id: string, direction: 'left' | 'right') {
-    const idx = compareIds.indexOf(id)
-    if (idx === -1) return
-    const next = direction === 'left' ? idx - 1 : idx + 1
-    if (next < 0 || next >= compareIds.length) return
-    const newOrder = [...compareIds]
-    ;[newOrder[idx], newOrder[next]] = [newOrder[next], newOrder[idx]]
-    onReorder(newOrder)
-  }
-
   return (
     <>
       <div className="overflow-x-auto">
@@ -80,32 +65,30 @@ export function CompareTable({
 
           {/* ── Sticky header row ── */}
           <div
-            className={`sticky top-0 z-20 bg-white flex transition-shadow ${
+            className={`sticky top-0 z-20 bg-white flex transition-all ${
               scrolled ? 'border-b border-gray-200' : ''
             }`}
           >
             <div className={`${LABEL_W} shrink-0`} />
-            {chairs.map((chair, i) => (
-              <CompareChairColumn
-                key={chair.id}
-                chair={chair}
-                isFirst={i === 0}
-                isLast={i === chairs.length - 1}
-                onMoveLeft={() => handleMove(chair.id, 'left')}
-                onMoveRight={() => handleMove(chair.id, 'right')}
-                onRemove={onRemove}
-              />
+
+            {/* Chair columns */}
+            {chairs.map((chair) => (
+              <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
             ))}
+
+            {/* Add column — same width and structure as a chair column */}
             {!isFull && (
-              <div className={`${ADD_W} shrink-0 flex items-end px-4 pb-5`}>
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
+              <button
+                onClick={() => setModalOpen(true)}
+                className={`${COL_W} shrink-0 px-4 pt-5 pb-4 flex flex-col items-center group`}
+              >
+                <div className="h-36 w-full rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-4 group-hover:border-gray-400 transition-colors">
+                  <Plus className="w-7 h-7 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                </div>
+                <span className="text-sm text-gray-400 group-hover:text-gray-600 transition-colors">
                   添加商品
-                </button>
-              </div>
+                </span>
+              </button>
             )}
           </div>
 
@@ -115,9 +98,9 @@ export function CompareTable({
               <span className="text-sm font-medium text-gray-600">基础参数</span>
             </div>
             {chairs.map((chair) => (
-              <div key={chair.id} className={`${CHAIR_W} shrink-0`} />
+              <div key={chair.id} className={`${COL_W} shrink-0`} />
             ))}
-            {!isFull && <div className={`${ADD_W} shrink-0`} />}
+            {!isFull && <div className={`${COL_W} shrink-0`} />}
           </div>
 
           {/* ── Parameter rows ── */}
@@ -136,12 +119,12 @@ export function CompareTable({
               {chairs.map((chair) => (
                 <div
                   key={chair.id}
-                  className={`${CHAIR_W} shrink-0 px-4 py-5 text-sm text-gray-800 flex items-center`}
+                  className={`${COL_W} shrink-0 px-4 py-5 text-sm text-gray-800 flex items-center`}
                 >
                   {param.getValue(chair, materials, colors)}
                 </div>
               ))}
-              {!isFull && <div className={`${ADD_W} shrink-0`} />}
+              {!isFull && <div className={`${COL_W} shrink-0`} />}
             </div>
           ))}
 
