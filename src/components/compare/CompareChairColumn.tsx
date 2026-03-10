@@ -27,7 +27,7 @@ export function CompareChairColumn({ chair, onRemove }: Props) {
     >
       {/* Image — drag handle */}
       <div
-        className="h-36 w-full relative rounded-lg overflow-hidden bg-white mb-4 cursor-grab active:cursor-grabbing"
+        className="h-28 w-full relative rounded-lg overflow-hidden bg-white mb-3 cursor-grab active:cursor-grabbing"
         {...attributes}
         {...listeners}
       >
