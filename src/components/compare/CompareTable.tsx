@@ -89,6 +89,7 @@ export function CompareTable({
 
   return (
     <>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <div className="overflow-x-auto">
         <div className="min-w-max">
 
@@ -101,13 +102,11 @@ export function CompareTable({
             <div className={`${LABEL_W} shrink-0`} />
 
             {/* Sortable chair columns */}
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={compareIds} strategy={horizontalListSortingStrategy}>
-                {chairs.map((chair) => (
-                  <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
-                ))}
-              </SortableContext>
-            </DndContext>
+            <SortableContext items={compareIds} strategy={horizontalListSortingStrategy}>
+              {chairs.map((chair) => (
+                <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
+              ))}
+            </SortableContext>
 
             {/* Add column — same width and structure as a chair column */}
             {!isFull && (
@@ -163,6 +162,7 @@ export function CompareTable({
 
         </div>
       </div>
+      </DndContext>
 
       <AddChairModal
         open={modalOpen}
