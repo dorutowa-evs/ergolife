@@ -61,6 +61,7 @@ export function CompareTable({
   colors,
   isFull,
   onRemove,
+  onReorder,
   onAdd,
 }: Props) {
   const [hoveredRow, setHoveredRow] = useState<number | null>(null)
