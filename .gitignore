@@ -44,6 +44,13 @@ next-env.d.ts
 .claude/
 .playwright-mcp/
 
+# stray git objects that appear in public/images/chairs/
+public/images/chairs/HEAD
+public/images/chairs/config
+public/images/chairs/hooks
+public/images/chairs/objects
+public/images/chairs/refs
+
 # qa screenshots
 qa-chairs-*.png
 
