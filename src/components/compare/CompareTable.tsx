@@ -1,5 +1,20 @@
 'use client'
 import { useState, useEffect } from 'react'
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable'
 import { Plus, Armchair } from 'lucide-react'
 import { CompareChairColumn } from './CompareChairColumn'
 import { AddChairModal } from './AddChairModal'
@@ -52,6 +67,20 @@ export function CompareTable({
   const [modalOpen, setModalOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  )
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const oldIndex = compareIds.indexOf(String(active.id))
+    const newIndex = compareIds.indexOf(String(over.id))
+    if (oldIndex === -1 || newIndex === -1) return
+    onReorder(arrayMove(compareIds, oldIndex, newIndex))
+  }
+
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 8)
     window.addEventListener('scroll', handler, { passive: true })
@@ -71,10 +100,14 @@ export function CompareTable({
           >
             <div className={`${LABEL_W} shrink-0`} />
 
-            {/* Chair columns */}
-            {chairs.map((chair) => (
-              <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
-            ))}
+            {/* Sortable chair columns */}
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={compareIds} strategy={horizontalListSortingStrategy}>
+                {chairs.map((chair) => (
+                  <CompareChairColumn key={chair.id} chair={chair} onRemove={onRemove} />
+                ))}
+              </SortableContext>
+            </DndContext>
 
             {/* Add column — same width and structure as a chair column */}
             {!isFull && (
