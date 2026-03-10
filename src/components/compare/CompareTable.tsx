@@ -38,8 +38,8 @@ const PARAMS: {
   { label: '腰靠可调节', getValue: (c) => formatBool(c.isLumbarAdjustable) },
 ]
 
-const LABEL_W = 'w-40'
-const COL_W   = 'w-36'   // shared by chair columns, add column, and param cells
+const LABEL_W = 'w-56'
+const COL_W   = 'w-52'   // shared by chair columns, add column, and param cells
 
 interface Props {
   chairs: Chair[]
@@ -115,7 +115,7 @@ export function CompareTable({
                 onClick={() => setModalOpen(true)}
                 className={`${COL_W} shrink-0 px-4 pt-5 pb-4 flex flex-col items-center group`}
               >
-                <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-3 group-hover:border-gray-400 transition-colors">
+                <div className="h-36 w-full rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-4 group-hover:border-gray-400 transition-colors">
                   <Plus className="w-7 h-7 text-gray-300 group-hover:text-gray-500 transition-colors" />
                 </div>
                 <span className="text-sm text-gray-400 group-hover:text-gray-600 transition-colors">
