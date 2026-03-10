@@ -21,7 +21,7 @@ export default function ComparePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-16">
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-16">
         {/* Back link */}
         <Link
           href="/chairs"
@@ -35,8 +35,7 @@ export default function ComparePage() {
           <CompareEmptyState />
         ) : (
           <>
-            <h1 className="text-2xl font-medium text-gray-900 text-center mt-8 mb-10">椅子对比</h1>
-              <CompareTable
+            <CompareTable
               chairs={compareChairs}
               allChairs={allChairs}
               compareIds={compareList}
