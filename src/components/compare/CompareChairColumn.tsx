@@ -23,7 +23,7 @@ export function CompareChairColumn({ chair, onRemove }: Props) {
     <div
       ref={setNodeRef}
       style={style}
-      className="relative w-52 shrink-0 px-4 pt-5 pb-4 group"
+      className="relative w-36 shrink-0 px-3 pt-5 pb-4 group"
     >
       {/* Image — drag handle */}
       <div
