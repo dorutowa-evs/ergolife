@@ -65,7 +65,6 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "badge": "TOP_PICK",
       "description": "Iconic 8Z Pellicle mesh distributes weight evenly across seat and back."
     },
     {
@@ -117,7 +116,6 @@
       "recliningAngle": 115,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "badge": "TOP_PICK",
       "description": "Pixelated support back designed by healthcare professionals to mirror the spine's natural movement."
     },
     {
@@ -269,8 +267,6 @@
       "recliningAngle": 125,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "badge": "SALE",
-      "originalPrice": 499,
       "description": "Built-for-gamers ergonomics with multi-layer synthetic leather and fully adjustable lumbar curve."
     },
     {

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Armchair } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 import type { Chair } from '@/types/catalog'
 
 interface Props {
@@ -11,11 +10,6 @@ interface Props {
   isInCompare: boolean
   onAdd: (id: string) => void
   onRemove: (id: string) => void
-}
-
-const BADGE_LABEL: Record<string, string> = {
-  TOP_PICK: 'TOP PICK',
-  SALE: 'SALE',
 }
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
@@ -48,15 +42,6 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
             </div>
           )}
         </Link>
-
-        {/* Badge（TOP PICK / SALE） */}
-        {chair.badge && (
-          <div className="absolute top-2 left-2">
-            <Badge className="bg-gray-900 text-white text-xs px-2 py-0.5 rounded-sm">
-              {BADGE_LABEL[chair.badge] ?? chair.badge}
-            </Badge>
-          </div>
-        )}
 
         {/* Hover 遮罩 */}
         {hovered && (
@@ -97,11 +82,6 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
             <span className="text-base font-semibold text-gray-900">
               ${chair.price.toFixed(2)}
             </span>
-            {chair.badge === 'SALE' && chair.originalPrice && (
-              <span className="text-sm text-gray-400 line-through">
-                ${chair.originalPrice.toFixed(2)}
-              </span>
-            )}
           </div>
           <Link
             href={`/chairs/${chair.id}`}
