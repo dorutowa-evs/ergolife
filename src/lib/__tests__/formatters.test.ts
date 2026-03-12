@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatPrice, formatMaterialLabel, formatBool, formatValue } from '@/lib/formatters'
+import { formatPrice, formatMaterialLabel, formatBool, formatValue, formatAdjustment, formatRange } from '@/lib/formatters'
 
 describe('formatPrice', () => {
   it('formats integer prices with thousands separator', () => {
@@ -48,5 +48,24 @@ describe('formatValue', () => {
   })
   it('returns -- for empty string', () => {
     expect(formatValue('')).toBe('--')
+  })
+})
+
+describe('formatAdjustment', () => {
+  it('returns value as-is for D grades', () => {
+    expect(formatAdjustment('3D')).toBe('3D')
+    expect(formatAdjustment('8D')).toBe('8D')
+  })
+  it('returns 无 for null', () => {
+    expect(formatAdjustment(null)).toBe('无')
+  })
+})
+
+describe('formatRange', () => {
+  it('formats cm range', () => {
+    expect(formatRange(45, 62, 'cm')).toBe('45–62 cm')
+  })
+  it('formats degree range with ° symbol', () => {
+    expect(formatRange(90, 135, '°')).toBe('90–135°')
   })
 })

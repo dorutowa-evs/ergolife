@@ -19,3 +19,12 @@ export function formatBool(value: boolean | undefined | null): string {
 export function formatValue(value: string | undefined | null): string {
   return value ? value : '--'
 }
+
+export function formatAdjustment(value: string | null): string {
+  return value ?? '无'
+}
+
+export function formatRange(min: number, max: number, unit: string): string {
+  const sep = unit === '°' ? '' : ' '
+  return `${min}–${max}${sep}${unit}`
+}
