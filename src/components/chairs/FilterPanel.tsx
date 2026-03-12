@@ -5,7 +5,6 @@ import { TriState } from '@/types/catalog'
 import { PriceRangeSlider } from './PriceRangeSlider'
 import { RangeSlider } from './RangeSlider'
 import { TileSelect } from './TileSelect'
-import { Checkbox } from '@/components/ui/checkbox'
 
 const HEADREST_OPTIONS = ['无', '3D', '5D', '6D']
 const ARMREST_OPTIONS  = ['无', '3D', '4D', '5D', '6D', '7D', '8D']
@@ -68,12 +67,9 @@ export function FilterPanel() {
   const materials = getMaterials()
   const colors = getColors()
 
-  const toggleMaterial = (id: string) => {
-    const next = filter.materials.includes(id)
-      ? filter.materials.filter((m) => m !== id)
-      : [...filter.materials, id]
-    setFilter({ ...filter, materials: next })
-  }
+  const matLabelToId = Object.fromEntries(materials.map((m) => [m.label, m.id]))
+  const matIdToLabel = Object.fromEntries(materials.map((m) => [m.id, m.label]))
+  const selectedMaterialLabels = filter.materials.map((id) => matIdToLabel[id]).filter(Boolean)
 
   const toggleColor = (id: string) => {
     const next = filter.colors.includes(id)
@@ -91,7 +87,7 @@ export function FilterPanel() {
       <div className="space-y-0">
 
         {/* 价格 */}
-        <div className="py-5">
+        <div className="pb-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-700">价格</span>
             {(filter.priceMin > absMin || filter.priceMax < absMax) && (
@@ -112,15 +108,11 @@ export function FilterPanel() {
         <div className="py-5">
           <SectionHeader label="材质" hasActive={filter.materials.length > 0}
             onClear={() => setFilter({ ...filter, materials: [] })} />
-          <div className="space-y-2">
-            {materials.map((m) => (
-              <label key={m.id} className="flex items-center gap-2 cursor-pointer">
-                <Checkbox id={`mat-${m.id}`} checked={filter.materials.includes(m.id)}
-                  onCheckedChange={() => toggleMaterial(m.id)} />
-                <span className="text-sm text-gray-600">{m.label}</span>
-              </label>
-            ))}
-          </div>
+          <TileSelect
+            options={materials.map((m) => m.label)}
+            selected={selectedMaterialLabels}
+            onChange={(labels) => setFilter({ ...filter, materials: labels.map((l) => matLabelToId[l]).filter(Boolean) })}
+          />
         </div>
 
         <hr className="border-gray-100" />

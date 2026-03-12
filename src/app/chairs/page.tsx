@@ -68,9 +68,9 @@ export default function ChairsPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+      <div className="max-w-7xl mx-auto px-6 py-8 flex gap-14">
         {/* 左侧筛选面板 */}
-        <div className="sticky top-20 self-start">
+        <div>
           <FilterPanel />
         </div>
 

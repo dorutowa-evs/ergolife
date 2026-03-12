@@ -30,7 +30,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
       {/* 图片区域 */}
       <div
         data-testid="card-image-area"
-        className={`relative aspect-[4/3] overflow-hidden ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
+        className={`relative aspect-square overflow-hidden ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >

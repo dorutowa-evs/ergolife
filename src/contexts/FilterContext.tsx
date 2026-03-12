@@ -15,7 +15,8 @@ const FilterContext = createContext<FilterContextValue | null>(null)
 export function FilterProvider({ children }: { children: ReactNode }) {
   const { min, max } = getPriceBounds()
   const defaultFilter = makeDefaultFilter(min, max)
-  const [filter, setFilterRaw] = useLocalStorage<FilterState>('chair-filter', defaultFilter)
+  const [filterRaw, setFilterRaw] = useLocalStorage<FilterState>('chair-filter', defaultFilter)
+  const filter: FilterState = { ...defaultFilter, ...filterRaw }
 
   const setFilter = (f: FilterState) => setFilterRaw(f)
   const resetFilter = () => setFilterRaw(defaultFilter)
