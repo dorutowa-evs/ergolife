@@ -86,6 +86,14 @@ describe('filterChairs', () => {
     expect(filterChairs(chairs, f({ lumbarAdjustable: 'yes' })).map(c => c.id)).toEqual(['1', '2', '3'])
   })
 
+  it('filters lumbar: no', () => {
+    expect(filterChairs(chairs, f({ lumbar: 'no' })).map(c => c.id)).toEqual(['4'])
+  })
+
+  it('filters lumbarAdjustable: no', () => {
+    expect(filterChairs(chairs, f({ lumbarAdjustable: 'no' })).map(c => c.id)).toEqual(['4'])
+  })
+
   it('sorts by price ascending', () => {
     expect(filterChairs(chairs, f({}), 'price_asc').map(c => c.id)).toEqual(['1', '4', '2', '3'])
   })
