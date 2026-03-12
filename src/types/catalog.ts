@@ -29,16 +29,19 @@ export interface Chair {
   name: string
   price: number
   imageUrl: string
-  // 产品图比例不统一：宽图用 cover 撑满，高图/全身图用 contain 避免裁剪
   imageFit?: 'cover' | 'contain'
-  material: string        // 对应 Material.id
-  color: string           // 对应 Color.id
-  hasHeadrest: boolean
+  material: 'mesh' | 'leather' | 'fabric'
+  color: string
   hasLumbar: boolean
   isLumbarAdjustable: boolean
+  headrestAdjustment: '3D' | '5D' | '6D' | null   // null = no headrest
+  armrestAdjustment: '3D' | '4D' | '5D' | '6D' | '7D' | '8D' | null  // null = no armrest
+  backHeight: number    // cm, 40–70
+  seatHeight: number    // cm, 40–55
+  recliningAngle: number // degrees, 30–160
   description: string
-  badge?: 'TOP_PICK' | 'SALE'   // 可选：卡片图片角标
-  originalPrice?: number         // 可选：SALE 时的原价（用于删除线显示）
+  badge?: 'TOP_PICK' | 'SALE'
+  originalPrice?: number
 }
 
 /** 筛选条件状态 */
@@ -48,9 +51,16 @@ export type SortOrder = 'default' | 'price_asc' | 'price_desc'
 export interface FilterState {
   priceMin: number
   priceMax: number
-  materials: string[]     // Material.id 列表
-  colors: string[]        // Color.id 列表
-  headrest: TriState
+  materials: string[]
+  colors: string[]
+  headrestAdjustment: string[]   // [] = all; 'none' = null headrest; '3D'|'5D'|'6D' = specific
+  armrestAdjustment: string[]    // [] = all; 'none' = null armrest; '3D'–'8D' = specific
+  backHeightMin: number
+  backHeightMax: number
+  seatHeightMin: number
+  seatHeightMax: number
+  recliningAngleMin: number
+  recliningAngleMax: number
   lumbar: TriState
   lumbarAdjustable: TriState
 }
@@ -61,7 +71,14 @@ export function makeDefaultFilter(priceMin: number, priceMax: number): FilterSta
     priceMax,
     materials: [],
     colors: [],
-    headrest: 'all',
+    headrestAdjustment: [],
+    armrestAdjustment: [],
+    backHeightMin: 40,
+    backHeightMax: 70,
+    seatHeightMin: 40,
+    seatHeightMax: 55,
+    recliningAngleMin: 30,
+    recliningAngleMax: 160,
     lumbar: 'all',
     lumbarAdjustable: 'all',
   }
