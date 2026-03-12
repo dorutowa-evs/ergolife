@@ -22,7 +22,7 @@ export function RangeSlider({ min, max, value, unit, onChange }: Props) {
         max={max}
         step={1}
         value={[value[0], value[1]]}
-        onValueChange={([a, b]) => onChange([a, b])}
+        onValueChange={(vals) => { if (vals.length >= 2) onChange([vals[0], vals[1]]) }}
       />
       <div className="flex justify-between text-xs text-gray-500">
         <span>{fmt(value[0], unit)}</span>

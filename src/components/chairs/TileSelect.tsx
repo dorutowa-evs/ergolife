@@ -20,6 +20,7 @@ export function TileSelect({ options, selected, onChange }: Props) {
       {options.map((opt) => (
         <button
           key={opt}
+          type="button"
           onClick={() => toggle(opt)}
           className={cn(
             'py-2 px-1 text-sm rounded-lg border transition-all text-center',
