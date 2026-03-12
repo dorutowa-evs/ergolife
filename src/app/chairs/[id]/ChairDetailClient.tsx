@@ -138,6 +138,7 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
 
             {/* 加入对比 CTA */}
             <button
+              type="button"
               onClick={handleCompareClick}
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
