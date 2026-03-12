@@ -40,6 +40,11 @@ export interface Chair {
   seatHeight: number    // cm, 40–55
   recliningAngle: number // degrees, 30–160
   description: string
+  platformPrices?: {
+    taobao?: number
+    jd?: number
+    pdd?: number
+  }
 }
 
 /** 筛选条件状态 */

@@ -31,7 +31,8 @@
       "recliningAngle": 110,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Breathable full-mesh back with lumbar zone support for all-day comfort."
+      "description": "Breathable full-mesh back with lumbar zone support for all-day comfort.",
+      "platformPrices": { "taobao": 1939, "jd": 2039, "pdd": 1839 }
     },
     {
       "id": "c002",
@@ -48,7 +49,8 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "High-back full-mesh design with adjustable headrest and breathable back for all-day comfort."
+      "description": "High-back full-mesh design with adjustable headrest and breathable back for all-day comfort.",
+      "platformPrices": { "taobao": 581, "jd": 611, "pdd": 551 }
     },
     {
       "id": "c003",
@@ -65,7 +67,8 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Iconic 8Z Pellicle mesh distributes weight evenly across seat and back."
+      "description": "Iconic 8Z Pellicle mesh distributes weight evenly across seat and back.",
+      "platformPrices": { "taobao": 1213, "jd": 1275, "pdd": 1150 }
     },
     {
       "id": "c004",
@@ -82,7 +85,8 @@
       "recliningAngle": 130,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "LiveBack technology adapts to every spinal movement, with 4D arms and lower-back firmness control."
+      "description": "LiveBack technology adapts to every spinal movement, with 4D arms and lower-back firmness control.",
+      "platformPrices": { "taobao": 1260, "jd": 1325, "pdd": 1195 }
     },
     {
       "id": "c005",
@@ -99,7 +103,8 @@
       "recliningAngle": 125,
       "hasLumbar": true,
       "isLumbarAdjustable": false,
-      "description": "360-degree arms engineered to support every posture and device, from laptops to tablets."
+      "description": "360-degree arms engineered to support every posture and device, from laptops to tablets.",
+      "platformPrices": { "taobao": 1124, "jd": 1182, "pdd": 1067 }
     },
     {
       "id": "c006",
@@ -116,7 +121,8 @@
       "recliningAngle": 115,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Pixelated support back designed by healthcare professionals to mirror the spine's natural movement."
+      "description": "Pixelated support back designed by healthcare professionals to mirror the spine's natural movement.",
+      "platformPrices": { "taobao": 1741, "jd": 1831, "pdd": 1651 }
     },
     {
       "id": "c007",
@@ -133,7 +139,8 @@
       "recliningAngle": 100,
       "hasLumbar": true,
       "isLumbarAdjustable": false,
-      "description": "Suspension bridge–inspired design with free-flex zones that move naturally with your body."
+      "description": "Suspension bridge–inspired design with free-flex zones that move naturally with your body.",
+      "platformPrices": { "taobao": 674, "jd": 709, "pdd": 640 }
     },
     {
       "id": "c008",
@@ -150,7 +157,8 @@
       "recliningAngle": 140,
       "hasLumbar": true,
       "isLumbarAdjustable": false,
-      "description": "Self-adjusting recline and a pivoting headrest that automatically follows head movement throughout the day."
+      "description": "Self-adjusting recline and a pivoting headrest that automatically follows head movement throughout the day.",
+      "platformPrices": { "taobao": 1355, "jd": 1425, "pdd": 1285 }
     },
     {
       "id": "c009",
@@ -166,7 +174,8 @@
       "recliningAngle": 110,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Direct-to-consumer ergonomics competing with premium brands — 4-position tilt-lock and adjustable lumbar."
+      "description": "Direct-to-consumer ergonomics competing with premium brands — 4-position tilt-lock and adjustable lumbar.",
+      "platformPrices": { "taobao": 319, "jd": 336, "pdd": 303 }
     },
     {
       "id": "c010",
@@ -182,7 +191,8 @@
       "recliningAngle": 105,
       "hasLumbar": true,
       "isLumbarAdjustable": false,
-      "description": "Frameless flexible back supports multiple sitting postures without restricting natural movement."
+      "description": "Frameless flexible back supports multiple sitting postures without restricting natural movement.",
+      "platformPrices": { "taobao": 1256, "jd": 1321, "pdd": 1191 }
     },
     {
       "id": "c011",
@@ -199,7 +209,8 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Award-winning frond-inspired design that flexes and moves with the body for dynamic ergonomic support."
+      "description": "Award-winning frond-inspired design that flexes and moves with the body for dynamic ergonomic support.",
+      "platformPrices": { "taobao": 1547, "jd": 1627, "pdd": 1467 }
     },
     {
       "id": "c012",
@@ -216,7 +227,8 @@
       "recliningAngle": 135,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Magnetic memory foam head pillow, 4-way adjustable lumbar, and cloud-soft SoftWeave Plus fabric."
+      "description": "Magnetic memory foam head pillow, 4-way adjustable lumbar, and cloud-soft SoftWeave Plus fabric.",
+      "platformPrices": { "taobao": 533, "jd": 560, "pdd": 505 }
     },
     {
       "id": "c013",
@@ -233,7 +245,8 @@
       "recliningAngle": 115,
       "hasLumbar": true,
       "isLumbarAdjustable": false,
-      "description": "Triple-zone breathable mesh back with adjustable headrest, 3D armrests, and dual lumbar support."
+      "description": "Triple-zone breathable mesh back with adjustable headrest, 3D armrests, and dual lumbar support.",
+      "platformPrices": { "taobao": 242, "jd": 254, "pdd": 229 }
     },
     {
       "id": "c014",
@@ -250,7 +263,8 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Premium mesh with 3D flexible back, adjustable lumbar, and 4D armrests at a mid-range price."
+      "description": "Premium mesh with 3D flexible back, adjustable lumbar, and 4D armrests at a mid-range price.",
+      "platformPrices": { "taobao": 339, "jd": 356, "pdd": 321 }
     },
     {
       "id": "c015",
@@ -267,7 +281,8 @@
       "recliningAngle": 125,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Built-for-gamers ergonomics with multi-layer synthetic leather and fully adjustable lumbar curve."
+      "description": "Built-for-gamers ergonomics with multi-layer synthetic leather and fully adjustable lumbar curve.",
+      "platformPrices": { "taobao": 387, "jd": 407, "pdd": 367 }
     },
     {
       "id": "c016",
@@ -284,7 +299,8 @@
       "recliningAngle": 120,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "S-shaped lumbar support system with 11 adjustability points, ideal for varied body types."
+      "description": "S-shaped lumbar support system with 11 adjustability points, ideal for varied body types.",
+      "platformPrices": { "taobao": 193, "jd": 203, "pdd": 183 }
     },
     {
       "id": "c017",
@@ -301,7 +317,8 @@
       "recliningAngle": 115,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "WireControl lumbar system and FlexBreath mesh rated for 15 years of daily use at 8+ hours."
+      "description": "WireControl lumbar system and FlexBreath mesh rated for 15 years of daily use at 8+ hours.",
+      "platformPrices": { "taobao": 280, "jd": 295, "pdd": 266 }
     },
     {
       "id": "c018",
@@ -318,7 +335,8 @@
       "recliningAngle": 110,
       "hasLumbar": true,
       "isLumbarAdjustable": true,
-      "description": "Fully adjustable headrest and lumbar support with reinforced nylon base rated for up to 330 lbs."
+      "description": "Fully adjustable headrest and lumbar support with reinforced nylon base rated for up to 330 lbs.",
+      "platformPrices": { "taobao": 232, "jd": 244, "pdd": 220 }
     }
   ]
 }
