@@ -50,3 +50,21 @@ it('hides add column when full', () => {
   render(<CompareTable chairs={chairs} materials={materials} colors={colors} onRemove={vi.fn()} onAdd={vi.fn()} isFull={true} compareIds={['c001', 'c002']} />)
   expect(screen.queryByText('添加商品')).not.toBeInTheDocument()
 })
+
+it('renders numeric parameter values', () => {
+  render(<CompareTable chairs={chairs} materials={materials} colors={colors} onRemove={vi.fn()} onAdd={vi.fn()} isFull={false} compareIds={['c001', 'c002']} />)
+  expect(screen.getByText('64 cm')).toBeInTheDocument()
+  expect(screen.getByText('58 cm')).toBeInTheDocument()
+  expect(screen.getByText('46 cm')).toBeInTheDocument()
+  expect(screen.getByText('44 cm')).toBeInTheDocument()
+  expect(screen.getByText('110°')).toBeInTheDocument()
+  expect(screen.getByText('115°')).toBeInTheDocument()
+})
+
+it('renders adjustment values including null as 无', () => {
+  render(<CompareTable chairs={chairs} materials={materials} colors={colors} onRemove={vi.fn()} onAdd={vi.fn()} isFull={false} compareIds={['c001', 'c002']} />)
+  expect(screen.getByText('8D')).toBeInTheDocument()
+  expect(screen.getByText('4D')).toBeInTheDocument()
+  expect(screen.getByText('3D')).toBeInTheDocument()
+  expect(screen.getAllByText('无').length).toBeGreaterThanOrEqual(1)
+})

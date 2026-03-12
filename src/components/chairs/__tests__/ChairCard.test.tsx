@@ -5,7 +5,9 @@ import type { Chair } from '@/types/catalog'
 
 const chair: Chair = {
   id: 'c001', name: 'Test Chair', price: 399, imageUrl: '',
-  material: 'mesh', color: 'black', hasHeadrest: true,
+  material: 'mesh', color: 'black',
+  headrestAdjustment: '3D', armrestAdjustment: '4D',
+  backHeight: 60, seatHeight: 46, recliningAngle: 110,
   hasLumbar: true, isLumbarAdjustable: true, description: '',
 }
 

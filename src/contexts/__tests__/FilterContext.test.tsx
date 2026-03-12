@@ -7,8 +7,9 @@ function Widget() {
   return (
     <div>
       <span data-testid="mat">{filter.materials.join(',')}</span>
-      <span data-testid="headrest">{filter.headrest}</span>
+      <span data-testid="headrest">{filter.headrestAdjustment.join(',')}</span>
       <button onClick={() => setFilter({ ...filter, materials: ['mesh'] })}>set-mat</button>
+      <button onClick={() => setFilter({ ...filter, headrestAdjustment: ['none', '3D'] })}>set-headrest</button>
       <button onClick={resetFilter}>reset</button>
     </div>
   )
@@ -33,5 +34,23 @@ describe('FilterContext', () => {
     await userEvent.click(screen.getByText('set-mat'))
     await userEvent.click(screen.getByText('reset'))
     expect(screen.getByTestId('mat').textContent).toBe('')
+  })
+
+  it('initializes with empty headrestAdjustment', () => {
+    render(<FilterProvider><Widget /></FilterProvider>)
+    expect(screen.getByTestId('headrest').textContent).toBe('')
+  })
+
+  it('updates headrestAdjustment', async () => {
+    render(<FilterProvider><Widget /></FilterProvider>)
+    await userEvent.click(screen.getByText('set-headrest'))
+    expect(screen.getByTestId('headrest').textContent).toBe('none,3D')
+  })
+
+  it('resets headrestAdjustment', async () => {
+    render(<FilterProvider><Widget /></FilterProvider>)
+    await userEvent.click(screen.getByText('set-headrest'))
+    await userEvent.click(screen.getByText('reset'))
+    expect(screen.getByTestId('headrest').textContent).toBe('')
   })
 })
