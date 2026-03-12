@@ -1,4 +1,4 @@
-import { getPriceBounds, getMaterials, getColors, getChairs, getConfig } from '../catalog'
+import { getPriceBounds, getMaterials, getColors, getChairs, getConfig, getChairById } from '../catalog'
 
 describe('catalog', () => {
   it('returns config', () => {
@@ -30,5 +30,18 @@ describe('catalog', () => {
     const config = getConfig()
     expect(min).toBe(config.priceMin)
     expect(max).toBe(config.priceMax)
+  })
+})
+
+describe('getChairById', () => {
+  it('returns chair when id exists', () => {
+    const chair = getChairById('c001')
+    expect(chair).toBeDefined()
+    expect(chair?.id).toBe('c001')
+  })
+
+  it('returns undefined when id does not exist', () => {
+    const chair = getChairById('does-not-exist')
+    expect(chair).toBeUndefined()
   })
 })

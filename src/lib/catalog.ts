@@ -25,3 +25,7 @@ export function getPriceBounds(): { min: number; max: number } {
     max: catalog.config.priceMax,
   }
 }
+
+export function getChairById(id: string): Chair | undefined {
+  return catalog.chairs.find((c) => c.id === id)
+}
