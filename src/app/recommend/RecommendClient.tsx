@@ -96,7 +96,7 @@ export function RecommendClient() {
 
       <div className="max-w-7xl mx-auto px-6 py-14">
         {/* Top section: form left, illustration right */}
-        <div className="flex gap-16 items-start mb-20">
+        <div className="flex gap-16 items-stretch mb-20">
 
           {/* Left: heading + form */}
           <div className="flex-1 min-w-0">
@@ -183,9 +183,9 @@ export function RecommendClient() {
           </div>
 
           {/* Right: illustration + description */}
-          <div className="flex-1 min-w-0">
-            {/* Body silhouette placeholder — always visible */}
-            <div className="relative bg-gray-200 flex items-center justify-center aspect-square overflow-hidden">
+          <div className="flex-1 min-w-0 flex flex-col">
+            {/* Body silhouette placeholder — fills space between top and description */}
+            <div className="relative bg-gray-200 flex items-center justify-center flex-1 overflow-hidden">
               {/* Crosshair lines */}
               <div className="absolute left-10 right-10 h-px bg-gray-300" />
               <div className="absolute top-10 bottom-10 left-1/2 w-px bg-gray-300" />
