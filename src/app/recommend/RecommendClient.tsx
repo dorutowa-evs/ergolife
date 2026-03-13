@@ -29,17 +29,17 @@ const PAIN_OPTIONS: { value: PainLevel; label: string }[] = [
 
 function PainSelector({ value, onChange }: { value: PainLevel; onChange: (v: PainLevel) => void }) {
   return (
-    <div className="flex">
-      {PAIN_OPTIONS.map(({ value: v, label }) => (
+    <div className="flex rounded-md overflow-hidden border border-gray-200">
+      {PAIN_OPTIONS.map(({ value: v, label }, i) => (
         <button
           key={v}
           type="button"
           onClick={() => onChange(v)}
-          className={`flex-1 py-3 text-xs font-bold tracking-[0.1em] uppercase border transition-colors ${
+          className={`flex-1 py-3 text-xs font-bold tracking-[0.1em] uppercase transition-colors ${
             value === v
-              ? 'bg-gray-950 text-white border-gray-950'
-              : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-          } ${v !== 'none' ? '-ml-px' : ''}`}
+              ? 'bg-gray-950 text-white'
+              : 'bg-white text-gray-500 hover:bg-gray-50'
+          } ${i !== 0 ? 'border-l border-gray-200' : ''}`}
         >
           {label}
         </button>
@@ -76,7 +76,7 @@ function FieldLabel({ htmlFor, text, unit, required, tooltip }: { htmlFor: strin
   )
 }
 
-const inputCls = 'w-full bg-white border border-gray-200 px-4 py-3 text-gray-900 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+const inputCls = 'w-full bg-white border border-gray-200 rounded-md px-4 py-3 text-gray-900 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
 
 export function RecommendClient() {
   const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
@@ -86,7 +86,7 @@ export function RecommendClient() {
   const [weightStr, setWeightStr] = useState('')
   const [thighLengthStr, setThighLengthStr] = useState('')
   const [shoulderWidthStr, setShoulderWidthStr] = useState('')
-  const [sittingHours, setSittingHours] = useState<SittingHours | ''>('')
+  const [sittingHours, setSittingHours] = useState<SittingHours | undefined>()
   const [lumbar, setLumbar] = useState<PainLevel>('none')
   const [neckPain, setNeckPain] = useState<PainLevel>('none')
   const [errors, setErrors] = useState<FormErrors>({})
@@ -110,7 +110,7 @@ export function RecommendClient() {
       weight: parseNum(weightStr),
       thighLength: parseNum(thighLengthStr),
       shoulderWidth: parseNum(shoulderWidthStr),
-      sittingHours: sittingHours || undefined,
+      sittingHours: sittingHours,
       hasBackPain: lumbar !== 'none',
       neckPain,
     }
@@ -177,11 +177,11 @@ export function RecommendClient() {
                 <span className="text-xs font-medium text-gray-600">每日久坐时长</span>
                 <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
-              <Select value={sittingHours} onValueChange={(v) => setSittingHours(v as SittingHours | '')}>
-                <SelectTrigger id="sittingHours" className="w-full bg-white border-gray-200 rounded-none h-[46px] text-sm focus:ring-0 focus:border-gray-900">
+              <Select value={sittingHours} onValueChange={(v) => setSittingHours(v as SittingHours)}>
+                <SelectTrigger id="sittingHours" className="w-full bg-white border-gray-200 rounded-md h-[46px] text-sm focus:ring-0 focus:border-gray-900">
                   <SelectValue placeholder="请选择" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" sideOffset={4}>
                   <SelectItem value="<4">少于 4 小时</SelectItem>
                   <SelectItem value="4-8">4–8 小时</SelectItem>
                   <SelectItem value=">8">超过 8 小时</SelectItem>
@@ -209,7 +209,7 @@ export function RecommendClient() {
             <button
               type="button"
               onClick={handleSubmit}
-              className="w-full bg-gray-950 text-white py-4 text-xs font-bold tracking-[0.15em] uppercase hover:bg-gray-800 active:scale-[0.99] transition-all"
+              className="w-full bg-gray-950 text-white py-4 rounded-md text-xs font-bold tracking-[0.15em] uppercase hover:bg-gray-800 active:scale-[0.99] transition-all"
             >
               查找匹配
             </button>
@@ -218,7 +218,7 @@ export function RecommendClient() {
           {/* Right: illustration + description */}
           <div className="flex-1 min-w-0 flex flex-col">
             {/* Body silhouette placeholder — fills space between top and description */}
-            <div className="relative bg-gray-200 flex items-center justify-center flex-1 overflow-hidden">
+            <div className="relative bg-gray-200 rounded-xl flex items-center justify-center flex-1 overflow-hidden">
               {/* Crosshair lines */}
               <div className="absolute left-10 right-10 h-px bg-gray-300" />
               <div className="absolute top-10 bottom-10 left-1/2 w-px bg-gray-300" />

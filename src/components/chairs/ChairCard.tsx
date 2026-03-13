@@ -3,7 +3,11 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Armchair } from 'lucide-react'
+import { getMaterials, getColors } from '@/lib/catalog'
 import type { Chair } from '@/types/catalog'
+
+const materials = getMaterials()
+const colors = getColors()
 
 interface Props {
   chair: Chair
@@ -12,58 +16,51 @@ interface Props {
   onRemove: (id: string) => void
 }
 
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [hovered, setHovered] = useState(false)
+  const [btnHovered, setBtnHovered] = useState(false)
 
   return (
     <div className={`rounded-xl overflow-hidden border-2 transition-all bg-white shadow-sm hover:shadow-md ${
       isInCompare ? 'border-gray-900' : 'border-transparent hover:border-gray-200'
     }`}>
       {/* 图片区域 */}
-      <div
+      <Link
+        href={`/chairs/${chair.id}`}
         data-testid="card-image-area"
-        className={`relative aspect-square overflow-hidden ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
+        className={`relative aspect-square overflow-hidden block ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
         onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onMouseLeave={() => { setHovered(false); setBtnHovered(false) }}
       >
-        <Link href={`/chairs/${chair.id}`} tabIndex={-1} className="absolute inset-0">
-          {chair.imageUrl ? (
-            <Image
-              src={chair.imageUrl}
-              alt={chair.name}
-              fill
-              className={`${chair.imageFit === 'contain' ? 'object-contain p-3' : 'object-cover'} transition-transform duration-300 hover:scale-105`}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Armchair className="w-16 h-16 text-gray-300" strokeWidth={1} />
-            </div>
-          )}
-        </Link>
-
-        {/* Hover 遮罩 */}
-        {hovered && (
-          <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
-            {isInCompare ? (
-              <button
-                onClick={(e) => { e.preventDefault(); onRemove(chair.id) }}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                ✓ 移出对比
-              </button>
-            ) : (
-              <button
-                onClick={(e) => { e.preventDefault(); onAdd(chair.id) }}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                + 加入对比
-              </button>
-            )}
+        {chair.imageUrl ? (
+          <Image
+            src={chair.imageUrl}
+            alt={chair.name}
+            fill
+            className={`${chair.imageFit === 'contain' ? 'object-contain p-3' : 'object-cover'} transition-transform duration-300 hover:scale-105`}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Armchair className="w-16 h-16 text-gray-300" strokeWidth={1} />
           </div>
         )}
-      </div>
+
+        {/* 角落对比按钮 */}
+        <button
+          type="button"
+          onClick={(e) => { e.preventDefault(); isInCompare ? onRemove(chair.id) : onAdd(chair.id) }}
+          onMouseEnter={(e) => { e.stopPropagation(); setBtnHovered(true) }}
+          onMouseLeave={(e) => { e.stopPropagation(); setBtnHovered(false) }}
+          className={[
+            'absolute top-2 right-2 text-xs px-2.5 py-1 rounded-lg font-medium transition-all',
+            hovered ? 'opacity-100' : 'opacity-0 pointer-events-none',
+            'bg-gray-900/80 text-white hover:bg-gray-900',
+          ].join(' ')}
+        >
+          {isInCompare ? (btnHovered ? '移除对比' : '✓ 已加入') : '+ 加入对比'}
+        </button>
+      </Link>
 
       {/* 卡片内容区 */}
       <div className={`p-4 ${isInCompare ? 'bg-gray-50' : ''}`}>
@@ -73,22 +70,14 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
         {/* 次级信息：材质 · 颜色 */}
         <p className="text-xs text-gray-400 mb-2">
-          {capitalize(chair.material)} · {capitalize(chair.color)}
+          {materials.find(m => m.id === chair.material)?.label ?? chair.material} · {colors.find(c => c.id === chair.color)?.name ?? chair.color}
         </p>
 
         {/* 价格区域 */}
-        <div className="flex items-center justify-between mt-1">
-          <div className="flex items-baseline gap-2">
-            <span className="text-base font-semibold text-gray-900">
-              ${chair.price.toFixed(2)}
-            </span>
-          </div>
-          <Link
-            href={`/chairs/${chair.id}`}
-            className="text-xs text-gray-400 hover:text-gray-700 transition-colors"
-          >
-            Details →
-          </Link>
+        <div className="mt-1">
+          <span className="text-base font-semibold text-gray-900">
+            ${chair.price.toFixed(2)}
+          </span>
         </div>
       </div>
     </div>
