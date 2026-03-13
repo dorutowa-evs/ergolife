@@ -169,7 +169,7 @@ export function RecommendClient() {
             {/* Row 4: lumbar 3-state */}
             <div className="mb-8">
               <div className="flex items-baseline gap-1.5 mb-2">
-                <span className="text-xs font-medium text-gray-600">腰背疼痛</span>
+                <span className="text-xs font-medium text-gray-600">腰背酸痛</span>
                 <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
               <div className="flex">
