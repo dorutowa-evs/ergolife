@@ -2,10 +2,11 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RecommendClient } from '../RecommendClient'
 import { CompareProvider } from '@/contexts/CompareContext'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from 'sonner'
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <CompareProvider>{children}<Toaster /></CompareProvider>
+  return <TooltipProvider><CompareProvider>{children}<Toaster /></CompareProvider></TooltipProvider>
 }
 
 describe('RecommendClient', () => {
