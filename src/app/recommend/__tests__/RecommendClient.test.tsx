@@ -17,7 +17,7 @@ describe('RecommendClient', () => {
 
   it('shows guidance text before submission', () => {
     render(<RecommendClient />, { wrapper: Wrapper })
-    expect(screen.getByText(/输入你的身高和体重/)).toBeInTheDocument()
+    expect(screen.getByText(/输入你的身体信息/)).toBeInTheDocument()
   })
 
   it('shows required field error when submitting empty form', async () => {
