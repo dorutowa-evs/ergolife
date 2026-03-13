@@ -4,6 +4,7 @@ import './globals.css'
 import { FilterProvider } from '@/contexts/FilterContext'
 import { CompareProvider } from '@/contexts/CompareContext'
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,12 +17,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CompareProvider>
-          <FilterProvider>
-            {children}
-            <Toaster />
-          </FilterProvider>
-        </CompareProvider>
+        <TooltipProvider>
+          <CompareProvider>
+            <FilterProvider>
+              {children}
+              <Toaster />
+            </FilterProvider>
+          </CompareProvider>
+        </TooltipProvider>
       </body>
     </html>
   )

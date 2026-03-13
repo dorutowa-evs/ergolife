@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Header } from '@/components/layout/Header'
 import { ChairCard } from '@/components/chairs/ChairCard'
 import { CompareFAB } from '@/components/compare/CompareFAB'
@@ -32,17 +33,24 @@ function getMatchBadge(score: number): { label: string; className: string } {
   return { label: '可考虑', className: 'bg-stone-100 text-stone-500 ring-1 ring-stone-200' }
 }
 
-function FieldLabel({ htmlFor, text, unit, required }: { htmlFor: string; text: string; unit?: string; required?: boolean }) {
+function FieldLabel({ htmlFor, text, unit, required, tooltip }: { htmlFor: string; text: string; unit?: string; required?: boolean; tooltip?: string }) {
   return (
-    <div className="flex items-baseline gap-1.5 mb-2">
+    <div className="flex items-center gap-1.5 mb-2">
       <label htmlFor={htmlFor} className="text-xs font-semibold tracking-wide text-gray-700">
         {text}
       </label>
       {unit && <span className="text-[10px] text-gray-400 uppercase tracking-wide">({unit})</span>}
-      {required
-        ? <span className="text-[10px] text-gray-400 ml-auto">必填</span>
-        : <span className="text-[10px] text-gray-400 ml-auto">选填</span>
-      }
+      {tooltip && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-gray-300 text-[9px] text-gray-400 cursor-default select-none">?</span>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="text-xs max-w-[180px]">
+            {tooltip}
+          </TooltipContent>
+        </Tooltip>
+      )}
+      <span className="text-[10px] text-gray-400 ml-auto">{required ? '必填' : '选填'}</span>
     </div>
   )
 }
@@ -129,9 +137,8 @@ export function RecommendClient() {
             {/* Row 2: thighLength + shoulderWidth */}
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} />
+                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} tooltip="坐姿时从座面到大腿根部的距离" />
                 <input id="thighLength" type="number" value={thighLengthStr} onChange={(e) => setThighLengthStr(e.target.value)} placeholder="45" className={inputCls} />
-                <p className="text-[10px] text-gray-400 mt-1 leading-tight">坐姿时从座面到大腿根部</p>
                 {errors.thighLength && <p className="text-xs text-red-500 mt-0.5">{errors.thighLength}</p>}
               </div>
               <div>
