@@ -40,14 +40,14 @@ function FieldLabel({ htmlFor, text, unit, required }: { htmlFor: string; text: 
       </label>
       {unit && <span className="text-[10px] text-gray-400 uppercase tracking-wide">({unit})</span>}
       {required
-        ? <span className="text-[10px] text-red-400 font-medium ml-auto">必填</span>
+        ? <span className="text-[10px] text-gray-400 ml-auto">必填</span>
         : <span className="text-[10px] text-gray-400 ml-auto">选填</span>
       }
     </div>
   )
 }
 
-const inputCls = 'w-full bg-white border border-gray-200 px-4 py-3 text-gray-900 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors'
+const inputCls = 'w-full bg-white border border-gray-200 px-4 py-3 text-gray-900 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
 
 export function RecommendClient() {
   const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
