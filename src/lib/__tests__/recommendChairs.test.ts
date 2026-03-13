@@ -75,6 +75,12 @@ describe('scoreChair', () => {
     const noLumbar = { ...baseChair, hasLumbar: false, isLumbarAdjustable: false }
     expect(scoreChair(withLumbar, withPain)).toBeGreaterThan(scoreChair(noLumbar, withPain))
   })
+  it('penalises missing headrest when neckPain is set', () => {
+    const withNeck: UserParams = { height: 170, weight: 70, neckPain: 'moderate' }
+    const withHead = { ...baseChair, headrestAdjustment: '3D' }
+    const noHead = { ...baseChair, headrestAdjustment: null }
+    expect(scoreChair(withHead, withNeck)).toBeGreaterThan(scoreChair(noHead, withNeck))
+  })
   it('uses thighLength for seat height scoring when provided', () => {
     const thighLength = 50
     const paramsWithThigh: UserParams = { height: 175, weight: 70, thighLength }
@@ -113,6 +119,10 @@ describe('generateDescription', () => {
   })
   it('mentions headrest for users sitting more than 8 hours', () => {
     const desc = generateDescription({ height: 170, weight: 70, sittingHours: '>8' })
+    expect(desc).toContain('头枕')
+  })
+  it('mentions headrest when neckPain is set', () => {
+    const desc = generateDescription({ height: 170, weight: 70, neckPain: 'moderate' })
     expect(desc).toContain('头枕')
   })
 })

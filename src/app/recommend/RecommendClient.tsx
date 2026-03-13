@@ -15,17 +15,38 @@ import {
   type UserParams,
   type ScoredChair,
   type SittingHours,
+  type PainLevel,
   type FormErrors,
 } from '@/lib/recommendChairs'
 
 const allChairs = getChairs()
 
-type LumbarState = 'none' | 'moderate' | 'severe'
-const LUMBAR_OPTIONS: { value: LumbarState; label: string }[] = [
+const PAIN_OPTIONS: { value: PainLevel; label: string }[] = [
   { value: 'none', label: '无' },
   { value: 'moderate', label: '轻微' },
   { value: 'severe', label: '严重' },
 ]
+
+function PainSelector({ value, onChange }: { value: PainLevel; onChange: (v: PainLevel) => void }) {
+  return (
+    <div className="flex">
+      {PAIN_OPTIONS.map(({ value: v, label }) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onChange(v)}
+          className={`flex-1 py-3 text-xs font-bold tracking-[0.1em] uppercase border transition-colors ${
+            value === v
+              ? 'bg-gray-950 text-white border-gray-950'
+              : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+          } ${v !== 'none' ? '-ml-px' : ''}`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 function getMatchBadge(score: number): { label: string; className: string } {
   if (score >= 80) return { label: '高度匹配', className: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' }
@@ -66,7 +87,8 @@ export function RecommendClient() {
   const [thighLengthStr, setThighLengthStr] = useState('')
   const [shoulderWidthStr, setShoulderWidthStr] = useState('')
   const [sittingHours, setSittingHours] = useState<SittingHours | ''>('')
-  const [lumbar, setLumbar] = useState<LumbarState>('none')
+  const [lumbar, setLumbar] = useState<PainLevel>('none')
+  const [neckPain, setNeckPain] = useState<PainLevel>('none')
   const [errors, setErrors] = useState<FormErrors>({})
   const [results, setResults] = useState<ScoredChair[] | null>(null)
   const [description, setDescription] = useState<string | null>(null)
@@ -90,6 +112,7 @@ export function RecommendClient() {
       shoulderWidth: parseNum(shoulderWidthStr),
       sittingHours: sittingHours || undefined,
       hasBackPain: lumbar !== 'none',
+      neckPain,
     }
     const errs = validateParams(raw)
     setErrors(errs)
@@ -167,27 +190,20 @@ export function RecommendClient() {
             </div>
 
             {/* Row 4: lumbar 3-state */}
-            <div className="mb-8">
+            <div className="mb-4">
               <div className="flex items-baseline gap-1.5 mb-2">
                 <span className="text-xs font-medium text-gray-600">腰背酸痛</span>
                 <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
-              <div className="flex">
-                {LUMBAR_OPTIONS.map(({ value, label }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setLumbar(value)}
-                    className={`flex-1 py-3 text-xs font-bold tracking-[0.1em] uppercase border transition-colors ${
-                      lumbar === value
-                        ? 'bg-gray-950 text-white border-gray-950'
-                        : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-                    } ${value !== 'none' ? '-ml-px' : ''}`}
-                  >
-                    {label}
-                  </button>
-                ))}
+              <PainSelector value={lumbar} onChange={setLumbar} />
+            </div>
+
+            <div className="mb-8">
+              <div className="flex items-baseline gap-1.5 mb-2">
+                <span className="text-xs font-medium text-gray-600">颈椎酸痛</span>
+                <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
+              <PainSelector value={neckPain} onChange={setNeckPain} />
             </div>
 
             <button

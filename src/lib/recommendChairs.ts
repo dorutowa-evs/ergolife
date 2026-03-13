@@ -1,6 +1,7 @@
 import type { Chair } from '@/types/catalog'
 
 export type SittingHours = '<4' | '4-8' | '>8'
+export type PainLevel = 'none' | 'moderate' | 'severe'
 
 export interface UserParams {
   height: number
@@ -9,6 +10,7 @@ export interface UserParams {
   shoulderWidth?: number // collected and validated; not yet used in scoring (Chair type has no shoulderWidth field — future extension)
   sittingHours?: SittingHours
   hasBackPain?: boolean
+  neckPain?: PainLevel
 }
 
 export interface FormErrors {
@@ -64,9 +66,13 @@ export function scoreChair(chair: Chair, params: UserParams): number {
     if (chair.isLumbarAdjustable) score += 10
   }
   if (params.hasBackPain && !chair.hasLumbar) score -= 20
+  const hasNeckPain = params.neckPain && params.neckPain !== 'none'
   if (chair.headrestAdjustment !== null) {
     score += 10
     if (params.height > 175 || params.sittingHours === '>8') score += 5
+    if (hasNeckPain) score += 5
+  } else if (hasNeckPain) {
+    score -= 15
   }
   return Math.max(0, Math.min(100, score))
 }
@@ -88,7 +94,9 @@ export function generateDescription(params: UserParams): string {
   } else {
     desc += '，推荐配备腰靠的椅子'
   }
-  if (params.height > 175 || params.sittingHours === '>8') {
+  if (params.neckPain && params.neckPain !== 'none') {
+    desc += '，有颈椎酸痛建议优先选择带头枕的椅子'
+  } else if (params.height > 175 || params.sittingHours === '>8') {
     desc += '，建议配备头枕'
   }
   return desc
