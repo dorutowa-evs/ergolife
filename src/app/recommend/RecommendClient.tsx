@@ -103,7 +103,7 @@ export function RecommendClient() {
             <h1 className="text-5xl font-black leading-[1.05] text-gray-950 tracking-tight mb-3">
               找到属于你的椅子
             </h1>
-            <p className="text-sm text-gray-500 mb-10 max-w-sm leading-relaxed">
+            <p className="text-sm text-gray-500 mb-10 leading-relaxed">
               输入你的身高和体重，帮你找到最适合的椅子。填写更多参数可获得更精准的推荐。
             </p>
 
