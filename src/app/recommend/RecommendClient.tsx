@@ -137,7 +137,7 @@ export function RecommendClient() {
             {/* Row 2: thighLength + shoulderWidth */}
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} tooltip="坐姿时从座面到大腿根部的距离" />
+                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} tooltip="坐姿时膝盖内侧到臀部的水平距离" />
                 <input id="thighLength" type="number" value={thighLengthStr} onChange={(e) => setThighLengthStr(e.target.value)} placeholder="45" className={inputCls} />
                 {errors.thighLength && <p className="text-xs text-red-500 mt-0.5">{errors.thighLength}</p>}
               </div>
