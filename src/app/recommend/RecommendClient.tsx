@@ -101,7 +101,7 @@ export function RecommendClient() {
           {/* Left: heading + form */}
           <div className="flex-1 min-w-0">
             <h1 className="text-5xl font-black leading-[1.05] text-gray-950 tracking-tight mb-3">
-              精准匹配<br />你的椅子。
+              精准匹配你的椅子
             </h1>
             <p className="text-sm text-gray-500 mb-10 max-w-sm leading-relaxed">
               输入你的身高和体重，帮你找到最适合的椅子。填写更多参数可获得更精准的推荐。
@@ -125,9 +125,9 @@ export function RecommendClient() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" />
-                <p className="text-[10px] text-gray-400 -mt-1.5 mb-1.5 leading-tight">坐姿时从座面到大腿根部</p>
                 <input id="thighLength" type="number" value={thighLengthStr} onChange={(e) => setThighLengthStr(e.target.value)} placeholder="45" className={inputCls} />
-                {errors.thighLength && <p className="text-xs text-red-500 mt-1">{errors.thighLength}</p>}
+                <p className="text-[10px] text-gray-400 mt-1 leading-tight">坐姿时从座面到大腿根部</p>
+                {errors.thighLength && <p className="text-xs text-red-500 mt-0.5">{errors.thighLength}</p>}
               </div>
               <div>
                 <FieldLabel htmlFor="shoulderWidth" text="肩宽" unit="cm" />
@@ -185,20 +185,20 @@ export function RecommendClient() {
           {/* Right: illustration + description */}
           <div className="w-[420px] shrink-0">
             {/* Body silhouette placeholder — always visible */}
-            <div className="relative bg-gray-200 flex items-center justify-center h-[380px]">
+            <div className="relative bg-gray-200 flex items-center justify-center h-[380px] overflow-hidden">
               {/* Crosshair lines */}
               <div className="absolute left-10 right-10 h-px bg-gray-300" />
               <div className="absolute top-10 bottom-10 left-1/2 w-px bg-gray-300" />
-              {/* Body silhouette */}
-              <svg width="72" height="144" viewBox="0 0 72 144" fill="none" className="relative z-10 opacity-25">
-                <circle cx="36" cy="16" r="11" fill="#555" />
-                <rect x="22" y="31" width="28" height="38" rx="3" fill="#555" />
-                <rect x="2" y="33" width="18" height="7" rx="3.5" fill="#555" />
-                <rect x="52" y="33" width="18" height="7" rx="3.5" fill="#555" />
-                <rect x="22" y="71" width="12" height="46" rx="3" fill="#555" />
-                <rect x="38" y="71" width="12" height="46" rx="3" fill="#555" />
-                <rect x="18" y="113" width="18" height="7" rx="3" fill="#555" />
-                <rect x="36" y="113" width="18" height="7" rx="3" fill="#555" />
+              {/* Body silhouette — fills ~70% of box height */}
+              <svg width="130" height="280" viewBox="0 0 72 160" fill="none" className="relative z-10 opacity-20">
+                <circle cx="36" cy="14" r="11" fill="#333" />
+                <rect x="21" y="29" width="30" height="42" rx="3" fill="#333" />
+                <rect x="1" y="31" width="19" height="8" rx="4" fill="#333" />
+                <rect x="52" y="31" width="19" height="8" rx="4" fill="#333" />
+                <rect x="21" y="73" width="13" height="52" rx="3" fill="#333" />
+                <rect x="38" y="73" width="13" height="52" rx="3" fill="#333" />
+                <rect x="17" y="121" width="19" height="8" rx="3" fill="#333" />
+                <rect x="36" y="121" width="19" height="8" rx="3" fill="#333" />
               </svg>
             </div>
 
