@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Header } from '@/components/layout/Header'
 import { ChairCard } from '@/components/chairs/ChairCard'
 import { CompareFAB } from '@/components/compare/CompareFAB'
@@ -31,13 +32,17 @@ function getMatchBadge(score: number): { label: string; className: string } {
   return { label: '可考虑', className: 'bg-stone-100 text-stone-500 ring-1 ring-stone-200' }
 }
 
-function FieldLabel({ htmlFor, text, unit }: { htmlFor: string; text: string; unit?: string }) {
+function FieldLabel({ htmlFor, text, unit, required }: { htmlFor: string; text: string; unit?: string; required?: boolean }) {
   return (
     <div className="flex items-baseline gap-1.5 mb-2">
-      <label htmlFor={htmlFor} className="text-[10px] font-bold tracking-[0.12em] text-gray-500 uppercase">
+      <label htmlFor={htmlFor} className="text-xs font-semibold tracking-wide text-gray-700">
         {text}
       </label>
       {unit && <span className="text-[10px] text-gray-400 uppercase tracking-wide">({unit})</span>}
+      {required
+        ? <span className="text-[10px] text-red-400 font-medium ml-auto">必填</span>
+        : <span className="text-[10px] text-gray-400 ml-auto">选填</span>
+      }
     </div>
   )
 }
@@ -110,12 +115,12 @@ export function RecommendClient() {
             {/* Row 1: height + weight */}
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <FieldLabel htmlFor="height" text="身高" unit="cm" />
+                <FieldLabel htmlFor="height" text="身高" unit="cm" required />
                 <input id="height" type="number" value={heightStr} onChange={(e) => setHeightStr(e.target.value)} placeholder="175" className={inputCls} />
                 {errors.height && <p className="text-xs text-red-500 mt-1">{errors.height}</p>}
               </div>
               <div>
-                <FieldLabel htmlFor="weight" text="体重" unit="kg" />
+                <FieldLabel htmlFor="weight" text="体重" unit="kg" required />
                 <input id="weight" type="number" value={weightStr} onChange={(e) => setWeightStr(e.target.value)} placeholder="70" className={inputCls} />
                 {errors.weight && <p className="text-xs text-red-500 mt-1">{errors.weight}</p>}
               </div>
@@ -124,13 +129,13 @@ export function RecommendClient() {
             {/* Row 2: thighLength + shoulderWidth */}
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" />
+                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} />
                 <input id="thighLength" type="number" value={thighLengthStr} onChange={(e) => setThighLengthStr(e.target.value)} placeholder="45" className={inputCls} />
                 <p className="text-[10px] text-gray-400 mt-1 leading-tight">坐姿时从座面到大腿根部</p>
                 {errors.thighLength && <p className="text-xs text-red-500 mt-0.5">{errors.thighLength}</p>}
               </div>
               <div>
-                <FieldLabel htmlFor="shoulderWidth" text="肩宽" unit="cm" />
+                <FieldLabel htmlFor="shoulderWidth" text="肩宽" unit="cm" required={false} />
                 <input id="shoulderWidth" type="number" value={shoulderWidthStr} onChange={(e) => setShoulderWidthStr(e.target.value)} placeholder="44" className={inputCls} />
                 {errors.shoulderWidth && <p className="text-xs text-red-500 mt-1">{errors.shoulderWidth}</p>}
               </div>
@@ -138,23 +143,28 @@ export function RecommendClient() {
 
             {/* Row 3: sittingHours */}
             <div className="mb-4">
-              <FieldLabel htmlFor="sittingHours" text="每日久坐时长" />
-              <select
-                id="sittingHours"
-                value={sittingHours}
-                onChange={(e) => setSittingHours(e.target.value as SittingHours | '')}
-                className={inputCls}
-              >
-                <option value="">请选择</option>
-                <option value="<4">少于 4 小时</option>
-                <option value="4-8">4–8 小时</option>
-                <option value=">8">超过 8 小时</option>
-              </select>
+              <div className="flex items-baseline gap-1.5 mb-2">
+                <span className="text-xs font-semibold tracking-wide text-gray-700">每日久坐时长</span>
+                <span className="text-[10px] text-gray-400 ml-auto">选填</span>
+              </div>
+              <Select value={sittingHours} onValueChange={(v) => setSittingHours(v as SittingHours | '')}>
+                <SelectTrigger id="sittingHours" className="w-full bg-white border-gray-200 rounded-none h-[46px] text-sm focus:ring-0 focus:border-gray-900">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="<4">少于 4 小时</SelectItem>
+                  <SelectItem value="4-8">4–8 小时</SelectItem>
+                  <SelectItem value=">8">超过 8 小时</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Row 4: lumbar 3-state */}
             <div className="mb-8">
-              <p className="text-[10px] font-bold tracking-[0.12em] text-gray-500 uppercase mb-2">腰部状况</p>
+              <div className="flex items-baseline gap-1.5 mb-2">
+                <span className="text-xs font-semibold tracking-wide text-gray-700">腰部状况</span>
+                <span className="text-[10px] text-gray-400 ml-auto">选填</span>
+              </div>
               <div className="flex">
                 {LUMBAR_OPTIONS.map(({ value, label }) => (
                   <button
