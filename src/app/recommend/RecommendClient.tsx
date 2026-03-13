@@ -185,7 +185,7 @@ export function RecommendClient() {
           {/* Right: illustration + description */}
           <div className="flex-1 min-w-0">
             {/* Body silhouette placeholder — always visible */}
-            <div className="relative bg-gray-200 flex items-center justify-center h-[440px] overflow-hidden">
+            <div className="relative bg-gray-200 flex items-center justify-center aspect-square overflow-hidden">
               {/* Crosshair lines */}
               <div className="absolute left-10 right-10 h-px bg-gray-300" />
               <div className="absolute top-10 bottom-10 left-1/2 w-px bg-gray-300" />
