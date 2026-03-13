@@ -36,7 +36,7 @@ function getMatchBadge(score: number): { label: string; className: string } {
 function FieldLabel({ htmlFor, text, unit, required, tooltip }: { htmlFor: string; text: string; unit?: string; required?: boolean; tooltip?: string }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
-      <label htmlFor={htmlFor} className="text-xs font-semibold tracking-wide text-gray-700">
+      <label htmlFor={htmlFor} className="text-xs font-medium text-gray-600">
         {text}
       </label>
       {unit && <span className="text-[10px] text-gray-400 uppercase tracking-wide">({unit})</span>}
@@ -151,7 +151,7 @@ export function RecommendClient() {
             {/* Row 3: sittingHours */}
             <div className="mb-4">
               <div className="flex items-baseline gap-1.5 mb-2">
-                <span className="text-xs font-semibold tracking-wide text-gray-700">每日久坐时长</span>
+                <span className="text-xs font-medium text-gray-600">每日久坐时长</span>
                 <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
               <Select value={sittingHours} onValueChange={(v) => setSittingHours(v as SittingHours | '')}>
@@ -169,7 +169,7 @@ export function RecommendClient() {
             {/* Row 4: lumbar 3-state */}
             <div className="mb-8">
               <div className="flex items-baseline gap-1.5 mb-2">
-                <span className="text-xs font-semibold tracking-wide text-gray-700">腰部状况</span>
+                <span className="text-xs font-medium text-gray-600">腰部状况</span>
                 <span className="text-[10px] text-gray-400 ml-auto">选填</span>
               </div>
               <div className="flex">
