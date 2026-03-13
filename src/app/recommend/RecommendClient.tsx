@@ -99,7 +99,7 @@ export function RecommendClient() {
         <div className="flex gap-16 items-start mb-20">
 
           {/* Left: heading + form */}
-          <div className="w-[460px] shrink-0">
+          <div className="flex-1 min-w-0">
             <h1 className="text-5xl font-black leading-[1.05] text-gray-950 tracking-tight mb-3">
               精准匹配你的椅子
             </h1>
