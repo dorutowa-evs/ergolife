@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Header } from '@/components/layout/Header'
 import { ChairCard } from '@/components/chairs/ChairCard'
 import { CompareFAB } from '@/components/compare/CompareFAB'
@@ -38,17 +38,23 @@ export function RecommendClient() {
   const [results, setResults] = useState<ScoredChair[] | null>(null)
   const [description, setDescription] = useState<string | null>(null)
 
-  const handleAddToCompare = (id: string) => {
+  const handleAddToCompare = useCallback((id: string) => {
     if (isFull) { showToast('最多对比 5 个商品'); return }
     addToCompare(id)
+  }, [isFull, showToast, addToCompare])
+
+  const parseNum = (s: string): number | undefined => {
+    if (!s) return undefined
+    const n = Number(s)
+    return isNaN(n) ? undefined : n
   }
 
   const handleSubmit = () => {
     const raw: Partial<UserParams> = {
-      height: heightStr ? Number(heightStr) : undefined,
-      weight: weightStr ? Number(weightStr) : undefined,
-      thighLength: thighLengthStr ? Number(thighLengthStr) : undefined,
-      shoulderWidth: shoulderWidthStr ? Number(shoulderWidthStr) : undefined,
+      height: parseNum(heightStr),
+      weight: parseNum(weightStr),
+      thighLength: parseNum(thighLengthStr),
+      shoulderWidth: parseNum(shoulderWidthStr),
       sittingHours: sittingHours || undefined,
       hasBackPain,
     }
@@ -61,7 +67,7 @@ export function RecommendClient() {
     setDescription(generateDescription(params))
   }
 
-  const hasHighMatch = results?.some((r) => r.score >= 60) ?? false
+  const hasHighMatch = results?.some((r) => r.score >= 80) ?? false
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -154,12 +160,12 @@ export function RecommendClient() {
                 </select>
               </div>
               <div className="flex items-center justify-between">
-                <label htmlFor="hasBackPain" className="text-sm font-medium text-gray-700">有腰部问题</label>
+                <span id="backPainLabel" className="text-sm font-medium text-gray-700">有腰部问题</span>
                 <button
-                  id="hasBackPain"
                   type="button"
                   role="switch"
                   aria-checked={hasBackPain}
+                  aria-labelledby="backPainLabel"
                   onClick={() => setHasBackPain((v) => !v)}
                   className={`relative w-10 h-6 rounded-full transition-colors ${hasBackPain ? 'bg-gray-900' : 'bg-gray-200'}`}
                 >

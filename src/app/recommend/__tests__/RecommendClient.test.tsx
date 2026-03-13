@@ -51,7 +51,7 @@ describe('RecommendClient', () => {
     expect(screen.getByText(/175cm/)).toBeInTheDocument()
   })
 
-  it('shows 推荐结果 heading when at least one chair scores >= 60', async () => {
+  it('shows 推荐结果 heading when at least one chair scores >= 80', async () => {
     render(<RecommendClient />, { wrapper: Wrapper })
     await userEvent.type(screen.getByLabelText('身高'), '175')
     await userEvent.type(screen.getByLabelText('体重'), '70')
