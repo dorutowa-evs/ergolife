@@ -94,7 +94,7 @@ export function RecommendClient() {
     <div className="min-h-screen bg-[#f0efed]">
       <Header />
 
-      <div className="max-w-6xl mx-auto px-8 py-14">
+      <div className="max-w-7xl mx-auto px-6 py-14">
         {/* Top section: form left, illustration right */}
         <div className="flex gap-16 items-start mb-20">
 
