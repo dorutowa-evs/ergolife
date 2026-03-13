@@ -13,8 +13,8 @@ export function Header() {
           </Link>
           {/* Nav placeholders */}
           <nav className="flex items-center gap-6">
-            <span className="text-sm text-gray-600 cursor-default">Office Chairs</span>
-            <span className="text-sm text-gray-400 cursor-default">Accessories</span>
+            <Link href="/chairs" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">办公椅</Link>
+            <Link href="/recommend" className="text-sm text-gray-400 hover:text-gray-900 transition-colors">椅子推荐</Link>
           </nav>
         </div>
 
