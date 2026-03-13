@@ -101,7 +101,7 @@ export function RecommendClient() {
           {/* Left: heading + form */}
           <div className="flex-1 min-w-0">
             <h1 className="text-5xl font-black leading-[1.05] text-gray-950 tracking-tight mb-3">
-              精准匹配你的椅子
+              找到属于你的椅子
             </h1>
             <p className="text-sm text-gray-500 mb-10 max-w-sm leading-relaxed">
               输入你的身高和体重，帮你找到最适合的椅子。填写更多参数可获得更精准的推荐。
