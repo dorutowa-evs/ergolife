@@ -99,7 +99,7 @@ export function RecommendClient() {
         <div className="flex gap-16 items-start mb-20">
 
           {/* Left: heading + form */}
-          <div className="flex-1 min-w-0">
+          <div className="w-[460px] shrink-0">
             <h1 className="text-5xl font-black leading-[1.05] text-gray-950 tracking-tight mb-3">
               精准匹配你的椅子
             </h1>
@@ -183,9 +183,9 @@ export function RecommendClient() {
           </div>
 
           {/* Right: illustration + description */}
-          <div className="w-[420px] shrink-0">
+          <div className="flex-1 min-w-0">
             {/* Body silhouette placeholder — always visible */}
-            <div className="relative bg-gray-200 flex items-center justify-center h-[380px] overflow-hidden">
+            <div className="relative bg-gray-200 flex items-center justify-center h-[440px] overflow-hidden">
               {/* Crosshair lines */}
               <div className="absolute left-10 right-10 h-px bg-gray-300" />
               <div className="absolute top-10 bottom-10 left-1/2 w-px bg-gray-300" />
