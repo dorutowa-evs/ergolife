@@ -44,6 +44,14 @@ next-env.d.ts
 .claude/
 .playwright-mcp/
 
+# ide
+.vscode/
+.idea/
+
+# misc local
+.mcp.json
+.ripgreprc
+
 # stray git objects that appear in public/images/chairs/
 public/images/chairs/HEAD
 public/images/chairs/config
