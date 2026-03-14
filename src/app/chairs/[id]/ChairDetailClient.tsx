@@ -1,11 +1,7 @@
-'use client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Armchair, ChevronLeft } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
-import { CompareFAB } from '@/components/compare/CompareFAB'
-import { useCompare } from '@/contexts/CompareContext'
-import { getChairs } from '@/lib/catalog'
 import {
   formatMaterialLabel,
   formatAdjustment,
@@ -13,8 +9,6 @@ import {
   formatPrice,
 } from '@/lib/formatters'
 import type { Chair, Material, Color } from '@/types/catalog'
-
-const allChairs = getChairs()
 
 interface Props {
   chair: Chair | undefined
@@ -28,22 +22,16 @@ const PLATFORMS = [
   { key: 'pdd'    as const, label: '拼多多', domain: 'pinduoduo.com' },
 ]
 
-function getBestPrice(chair: Chair) {
-  let bestPlatform = ''
-  let bestPrice = Infinity
-  for (const { key, label } of PLATFORMS) {
+function getBestPrice(chair: Chair): number | null {
+  let best = Infinity
+  for (const { key } of PLATFORMS) {
     const p = chair.platformPrices?.[key]
-    if (p != null && p < bestPrice) {
-      bestPrice = p
-      bestPlatform = label
-    }
+    if (p != null && p < best) best = p
   }
-  return bestPrice === Infinity ? null : { price: bestPrice, platform: bestPlatform }
+  return best === Infinity ? null : best
 }
 
 export function ChairDetailClient({ chair, materials, colors }: Props) {
-  const { compareList, removeFromCompare, clearAll } = useCompare()
-
   if (!chair) {
     return (
       <div className="min-h-screen bg-page">
@@ -55,7 +43,7 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
     )
   }
 
-  const best = getBestPrice(chair)
+  const bestPrice = getBestPrice(chair)
 
   return (
     <div className="min-h-screen bg-page">
@@ -93,11 +81,11 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
             </h1>
 
             {/* 最低平台价 */}
-            {best && (
+            {bestPrice != null && (
               <div className="mb-6">
                 <p className="text-[10px] font-bold tracking-[0.12em] text-gray-400 uppercase mb-1">最低平台价</p>
                 <p className="text-3xl text-gray-950 tracking-tight">
-                  {formatPrice(best.price)}
+                  {formatPrice(bestPrice)}
                 </p>
               </div>
             )}
@@ -164,13 +152,6 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
           </div>
         </div>
       </div>
-
-      <CompareFAB
-        compareIds={compareList}
-        chairs={allChairs}
-        onRemove={removeFromCompare}
-        onClearAll={clearAll}
-      />
     </div>
   )
 }

@@ -1,10 +1,9 @@
 'use client'
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Armchair } from 'lucide-react'
 import { getMaterials, getColors } from '@/lib/catalog'
-import { formatPrice } from '@/lib/formatters'
+import { formatPrice, formatMaterialLabel } from '@/lib/formatters'
 import type { Chair } from '@/types/catalog'
 
 const materials = getMaterials()
@@ -17,11 +16,7 @@ interface Props {
   onRemove: (id: string) => void
 }
 
-
 export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
-  const [hovered, setHovered] = useState(false)
-  const [btnHovered, setBtnHovered] = useState(false)
-
   return (
     <div className={`rounded-xl overflow-hidden border-2 transition-colors bg-white shadow-sm ${
       isInCompare ? 'border-gray-900' : 'border-transparent hover:border-gray-200'
@@ -30,9 +25,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
       <Link
         href={`/chairs/${chair.id}`}
         data-testid="card-image-area"
-        className={`relative aspect-square overflow-hidden block ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => { setHovered(false); setBtnHovered(false) }}
+        className={`group relative aspect-square overflow-hidden block ${chair.imageUrl ? 'bg-white' : 'bg-gray-100'}`}
       >
         {chair.imageUrl ? (
           <Image
@@ -51,15 +44,9 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
         <button
           type="button"
           onClick={(e) => { e.preventDefault(); isInCompare ? onRemove(chair.id) : onAdd(chair.id) }}
-          onMouseEnter={(e) => { e.stopPropagation(); setBtnHovered(true) }}
-          onMouseLeave={(e) => { e.stopPropagation(); setBtnHovered(false) }}
-          className={[
-            'absolute top-2 right-2 text-xs px-2.5 py-1 rounded-lg font-medium transition-all',
-            hovered ? 'opacity-100' : 'opacity-0 pointer-events-none',
-            'bg-gray-900/80 text-white hover:bg-gray-900',
-          ].join(' ')}
+          className="absolute top-2 right-2 text-xs px-2.5 py-1 rounded-lg font-medium transition-all opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto bg-gray-900/80 text-white hover:bg-gray-900"
         >
-          {isInCompare ? (btnHovered ? '移除对比' : '✓ 已加入') : '+ 加入对比'}
+          {isInCompare ? '移除对比' : '加入对比'}
         </button>
       </Link>
 
@@ -71,7 +58,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
         {/* 次级信息：材质 · 颜色 */}
         <p className="text-xs text-gray-400 mb-2">
-          {materials.find(m => m.id === chair.material)?.label ?? chair.material} · {colors.find(c => c.id === chair.color)?.name ?? chair.color}
+          {formatMaterialLabel(chair.material, materials)} · {colors.find(c => c.id === chair.color)?.name ?? chair.color}
         </p>
 
         {/* 价格区域 */}

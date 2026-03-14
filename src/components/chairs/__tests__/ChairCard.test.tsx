@@ -21,20 +21,20 @@ describe('ChairCard', () => {
   it('shows add button on image hover when not in compare', async () => {
     render(<ChairCard chair={chair} isInCompare={false} onAdd={vi.fn()} onRemove={vi.fn()} />)
     await userEvent.hover(screen.getByTestId('card-image-area'))
-    expect(screen.getByText('+ 加入对比')).toBeInTheDocument()
+    expect(screen.getByText('加入对比')).toBeInTheDocument()
   })
 
-  it('shows 已加入 button on image hover when in compare', async () => {
+  it('shows remove button on image hover when in compare', async () => {
     render(<ChairCard chair={chair} isInCompare={true} onAdd={vi.fn()} onRemove={vi.fn()} />)
     await userEvent.hover(screen.getByTestId('card-image-area'))
-    expect(screen.getByText('✓ 已加入')).toBeInTheDocument()
+    expect(screen.getByText('移除对比')).toBeInTheDocument()
   })
 
   it('calls onAdd with chair id when add clicked', async () => {
     const onAdd = vi.fn()
     render(<ChairCard chair={chair} isInCompare={false} onAdd={onAdd} onRemove={vi.fn()} />)
     await userEvent.hover(screen.getByTestId('card-image-area'))
-    await userEvent.click(screen.getByText('+ 加入对比'))
+    await userEvent.click(screen.getByText('加入对比'))
     expect(onAdd).toHaveBeenCalledWith('c001')
   })
 
@@ -42,7 +42,6 @@ describe('ChairCard', () => {
     const onRemove = vi.fn()
     render(<ChairCard chair={chair} isInCompare={true} onAdd={vi.fn()} onRemove={onRemove} />)
     await userEvent.hover(screen.getByTestId('card-image-area'))
-    await userEvent.hover(screen.getByText('✓ 已加入'))
     await userEvent.click(screen.getByText('移除对比'))
     expect(onRemove).toHaveBeenCalledWith('c001')
   })
