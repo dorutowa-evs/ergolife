@@ -39,9 +39,9 @@ function TriStateGroup({
         variant="outline"
         className="w-full"
       >
-        <ToggleGroupItem value="all" className="flex-1 text-xs data-[state=on]:bg-gray-700 data-[state=on]:text-white">不限</ToggleGroupItem>
-        <ToggleGroupItem value="yes" className="flex-1 text-xs data-[state=on]:bg-gray-700 data-[state=on]:text-white">有</ToggleGroupItem>
-        <ToggleGroupItem value="no"  className="flex-1 text-xs data-[state=on]:bg-gray-700 data-[state=on]:text-white">无</ToggleGroupItem>
+        <ToggleGroupItem value="all" className="flex-1 text-xs data-[state=on]:bg-gray-950 data-[state=on]:text-white">不限</ToggleGroupItem>
+        <ToggleGroupItem value="yes" className="flex-1 text-xs data-[state=on]:bg-gray-950 data-[state=on]:text-white">有</ToggleGroupItem>
+        <ToggleGroupItem value="no"  className="flex-1 text-xs data-[state=on]:bg-gray-950 data-[state=on]:text-white">无</ToggleGroupItem>
       </ToggleGroup>
     </div>
   )

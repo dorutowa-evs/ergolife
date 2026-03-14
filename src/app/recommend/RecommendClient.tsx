@@ -39,7 +39,7 @@ function PainSelector({ value, onChange }: { value: PainLevel; onChange: (v: Pai
       className="w-full"
     >
       {PAIN_OPTIONS.map(({ value: v, label }) => (
-        <ToggleGroupItem key={v} value={v} className="flex-1 text-xs data-[state=on]:bg-gray-900 data-[state=on]:text-white">
+        <ToggleGroupItem key={v} value={v} className="flex-1 text-xs data-[state=on]:bg-gray-950 data-[state=on]:text-white">
           {label}
         </ToggleGroupItem>
       ))}
