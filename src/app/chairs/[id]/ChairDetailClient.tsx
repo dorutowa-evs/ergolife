@@ -1,11 +1,10 @@
 'use client'
-import { useState } from 'react'
 import Image from 'next/image'
-import { Armchair } from 'lucide-react'
+import Link from 'next/link'
+import { Armchair, ChevronLeft } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
 import { CompareFAB } from '@/components/compare/CompareFAB'
 import { useCompare } from '@/contexts/CompareContext'
-import { useToast } from '@/hooks/useToast'
 import { getChairs } from '@/lib/catalog'
 import {
   formatMaterialLabel,
@@ -23,40 +22,31 @@ interface Props {
   colors: Color[]
 }
 
-const SPECS: {
-  label: string
-  getValue: (c: Chair, m: Material[], cols: Color[]) => string
-}[] = [
-  { label: '材质',       getValue: (c, m) => formatMaterialLabel(c.material, m) },
-  { label: '颜色',       getValue: (c, _, cols) => cols.find((col) => col.id === c.color)?.name ?? c.color },
-  { label: '靠背高度',   getValue: (c) => `${c.backHeight} cm` },
-  { label: '座高',       getValue: (c) => `${c.seatHeight} cm` },
-  { label: '后仰角度',   getValue: (c) => `${c.recliningAngle}°` },
-  { label: '扶手',       getValue: (c) => formatAdjustment(c.armrestAdjustment) },
-  { label: '头枕',       getValue: (c) => formatAdjustment(c.headrestAdjustment) },
-  { label: '腰靠',       getValue: (c) => formatBool(c.hasLumbar) },
-  { label: '腰靠可调节', getValue: (c) => formatBool(c.isLumbarAdjustable) },
+const PLATFORMS = [
+  { key: 'taobao' as const, label: '淘宝',  domain: 'taobao.com' },
+  { key: 'jd'     as const, label: '京东',  domain: 'jd.com' },
+  { key: 'pdd'    as const, label: '拼多多', domain: 'pinduoduo.com' },
 ]
 
-const PLATFORMS = [
-  { key: 'pdd'    as const, label: '拼多多' },
-  { key: 'taobao' as const, label: '淘宝' },
-  { key: 'jd'     as const, label: '京东' },
-]
+function getBestPrice(chair: Chair) {
+  let bestPlatform = ''
+  let bestPrice = Infinity
+  for (const { key, label } of PLATFORMS) {
+    const p = chair.platformPrices?.[key]
+    if (p != null && p < bestPrice) {
+      bestPrice = p
+      bestPlatform = label
+    }
+  }
+  return bestPrice === Infinity ? null : { price: bestPrice, platform: bestPlatform }
+}
 
 export function ChairDetailClient({ chair, materials, colors }: Props) {
-  const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
-  const { showToast } = useToast()
-  const [imgHovered, setImgHovered] = useState(false)
-  const [btnHovered, setBtnHovered] = useState(false)
-  const [activeImg, setActiveImg] = useState(0)
-
-  // Stub gallery: index 0 = real image, 1 & 2 = white placeholders
-  const STUB_COUNT = 3
+  const { compareList, removeFromCompare, clearAll } = useCompare()
 
   if (!chair) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-page">
         <Header />
         <div className="flex items-center justify-center py-40 text-gray-400 text-sm">
           商品不存在
@@ -65,130 +55,113 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
     )
   }
 
-  const inCompare = isInCompare(chair.id)
-
-  const handleCompareClick = () => {
-    setBtnHovered(false)
-    if (inCompare) {
-      removeFromCompare(chair.id)
-    } else if (isFull) {
-      showToast('最多对比 5 个商品')
-    } else {
-      addToCompare(chair.id)
-    }
-  }
-
-  const btnLabel = inCompare
-    ? (btnHovered ? '移除对比' : '✓ 已加入')
-    : '＋ 加入对比'
+  const best = getBestPrice(chair)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-page">
       <Header />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex gap-14 items-stretch">
+        {/* 左右分栏 */}
+        <div className="flex gap-12 items-stretch">
 
-          {/* 左侧：主图 + 缩略图 */}
-          <div className="w-[380px] shrink-0 self-start flex flex-col gap-3">
-            {/* 主图 */}
-            <div
-              className="rounded-2xl overflow-hidden bg-white border border-gray-100 aspect-square relative"
-              onMouseEnter={() => setImgHovered(true)}
-              onMouseLeave={() => { setImgHovered(false); setBtnHovered(false) }}
-            >
-              {activeImg === 0 && chair.imageUrl ? (
-                <Image
-                  src={chair.imageUrl}
-                  alt={chair.name}
-                  fill
-                  className={chair.imageFit === 'contain' ? 'object-contain p-8' : 'object-cover'}
-                />
-              ) : activeImg === 0 ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Armchair className="w-28 h-28 text-gray-200" strokeWidth={1} />
-                </div>
-              ) : null /* stubs: plain white bg */}
-              {/* 加入对比 hover 按钮 */}
-              <button
-                type="button"
-                onClick={handleCompareClick}
-                onMouseEnter={() => setBtnHovered(true)}
-                onMouseLeave={() => setBtnHovered(false)}
-                className={[
-                  'absolute top-3 right-3 text-xs px-3 py-1.5 rounded-lg font-medium transition-all',
-                  imgHovered ? 'opacity-100' : 'opacity-0 pointer-events-none',
-                  'bg-gray-900/80 text-white hover:bg-gray-900',
-                ].join(' ')}
-              >
-                {btnLabel}
-              </button>
-            </div>
-
-            {/* 缩略图行 */}
-            <div className="flex gap-2">
-              {Array.from({ length: STUB_COUNT }).map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setActiveImg(i)}
-                  className={[
-                    'flex-1 aspect-square rounded-lg overflow-hidden bg-white border-2 transition-colors',
-                    activeImg === i ? 'border-gray-900' : 'border-transparent hover:border-gray-300',
-                  ].join(' ')}
-                >
-                  {i === 0 && chair.imageUrl && (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={chair.imageUrl}
-                        alt={chair.name}
-                        fill
-                        className={chair.imageFit === 'contain' ? 'object-contain p-1' : 'object-cover'}
-                      />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
+          {/* 左侧：图片 */}
+          <div className="flex-1 min-w-0 rounded-xl overflow-hidden bg-white aspect-square relative">
+            <Link href="/chairs" className="absolute top-3 left-3 z-10 inline-flex items-center gap-1 text-xs text-gray-500 bg-white/80 px-2.5 py-1.5 rounded-lg hover:bg-white transition-colors shadow-sm">
+              <ChevronLeft className="w-3 h-3" />
+              返回
+            </Link>
+            {chair.imageUrl ? (
+              <Image
+                src={chair.imageUrl}
+                alt={chair.name}
+                fill
+                className={chair.imageFit === 'contain' ? 'object-contain p-8' : 'object-cover'}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Armchair className="w-24 h-24 text-gray-200" strokeWidth={1} />
+              </div>
+            )}
           </div>
 
-          {/* 右侧：标题 + 价格 + 规格（统一 grid） */}
-          <div className="flex-1 flex flex-col">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-snug">
+          {/* 右侧：信息 */}
+          <div className="flex-1 min-w-0 flex flex-col">
+            {/* 名称 */}
+            <h1 className="font-display text-5xl font-bold text-gray-950 mb-5 leading-tight tracking-tight">
               {chair.name}
             </h1>
 
-            {/* 平台价格 + 规格参数 — 同一个 4 列 grid，第 4 列对齐 */}
-            <div
-              className="grid items-center"
-              style={{ gridTemplateColumns: 'auto 1fr auto auto', columnGap: '1rem' }}
-            >
-              {/* 平台价格行 */}
-              {PLATFORMS.flatMap(({ key, label }, i) => {
+            {/* 最低平台价 */}
+            {best && (
+              <div className="mb-6">
+                <p className="text-[10px] font-bold tracking-[0.12em] text-gray-400 uppercase mb-1">最低平台价</p>
+                <p className="text-3xl text-gray-950 tracking-tight">
+                  {formatPrice(best.price)}
+                </p>
+              </div>
+            )}
+
+            {/* 平台价格列表 */}
+            <div className="divide-y divide-gray-100 mb-10">
+              {PLATFORMS.map(({ key, label, domain }) => {
                 const price = chair.platformPrices?.[key]
-                const border = i > 0 ? 'border-t border-gray-100' : ''
-                return [
-                  <span key={`${key}-l`} className={`text-sm text-gray-500 py-3 ${border}`}>{label}</span>,
-                  <span key={`${key}-p`} className={`text-sm text-gray-900 py-3 ${border}`}>{price != null ? formatPrice(price) : '—'}</span>,
-                  <span key={`${key}-e`} className={`py-3 ${border}`} />,
-                  <button key={`${key}-b`} type="button" disabled className={`text-xs px-3 py-1 rounded-md border border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed justify-self-end ${border}`}>购买</button>,
-                ]
+                if (price == null) return null
+                return (
+                  <div key={key} className="flex items-center py-2">
+                    <div className="flex items-center gap-2 w-28">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+                        alt={label}
+                        width={16}
+                        height={16}
+                        className="rounded-sm"
+                      />
+                      <span className="text-sm text-gray-500">{label}</span>
+                    </div>
+                    <span className="text-sm text-gray-900 flex-1">{formatPrice(price)}</span>
+                    <button
+                      disabled
+                      title="该功能暂时未开放"
+                      className="text-xs px-3 py-1.5 rounded-md border border-gray-300 text-gray-500 cursor-not-allowed"
+                    >
+                      购买
+                    </button>
+                  </div>
+                )
               })}
+            </div>
 
-              {/* 分隔线 */}
-              <div className="col-span-4 h-px bg-gray-100 my-5" />
-
-              {/* 规格参数标题 */}
-              <p className="col-span-4 text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">规格参数</p>
-
-              {/* 规格行：每两个 spec 占一行，label→col1, value→col2, label→col3, value→col4 */}
-              {SPECS.flatMap(({ label, getValue }) => [
-                <span key={`${label}-l`} className="text-xs text-gray-400 py-1">{label}</span>,
-                <span key={`${label}-v`} className="text-sm text-gray-900 py-1">{getValue(chair, materials, colors)}</span>,
-              ])}
+            {/* 规格参数 — mt-auto 让底部和图片底部对齐 */}
+            <div className="mt-auto w-full">
+              <div className="grid grid-cols-3 gap-y-5">
+                <SpecItem label="靠背高度" value={`${chair.backHeight} cm`} />
+                <SpecItem label="座高" value={`${chair.seatHeight} cm`} />
+                <SpecItem label="后仰角度" value={`${chair.recliningAngle}°`} />
+                <SpecItem label="材质" value={formatMaterialLabel(chair.material, materials)} />
+                <SpecItem label="颜色" value={colors.find((c) => c.id === chair.color)?.name ?? chair.color} />
+                <SpecItem label="扶手" value={formatAdjustment(chair.armrestAdjustment)} />
+                <SpecItem label="头枕" value={formatAdjustment(chair.headrestAdjustment)} />
+                <SpecItem label="腰靠" value={formatBool(chair.hasLumbar)} />
+                <SpecItem label="腰靠可调节" value={formatBool(chair.isLumbarAdjustable)} />
+              </div>
             </div>
           </div>
+        </div>
 
+        {/* 评测 */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-gray-950 tracking-tight mb-6">评测</h2>
+          <div className="rounded-xl overflow-hidden aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/UV0mhY2Dxr0"
+              title="椅子评测视频"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
         </div>
       </div>
 
@@ -198,6 +171,15 @@ export function ChairDetailClient({ chair, materials, colors }: Props) {
         onRemove={removeFromCompare}
         onClearAll={clearAll}
       />
+    </div>
+  )
+}
+
+function SpecItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs text-gray-400 mb-1">{label}</p>
+      <p className="text-base text-gray-950 leading-tight">{value}</p>
     </div>
   )
 }

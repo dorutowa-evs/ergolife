@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-page: oklch(1 0 0);            /* white page background */
+  --font-display: var(--font-playfair);  /* Playfair Display — editorial headings */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

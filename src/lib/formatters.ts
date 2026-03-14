@@ -13,7 +13,7 @@ export function formatMaterialLabel(id: string, materials: Material[]): string {
 
 export function formatBool(value: boolean | undefined | null): string {
   if (value === undefined || value === null) return '--'
-  return value ? '✓ 有' : '✗ 无'
+  return value ? '有' : '无'
 }
 
 export function formatValue(value: string | undefined | null): string {

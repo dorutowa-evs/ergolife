@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { Scale } from 'lucide-react'
 import type { Chair } from '@/types/catalog'
 
 interface Props {
@@ -58,7 +59,7 @@ export function CompareFAB({ compareIds, chairs, onRemove, onClearAll }: Props) 
         aria-label={`对比 (${compareIds.length})`}
         className="flex items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-lg hover:bg-gray-700 transition-colors font-medium text-sm"
       >
-        <span>⚖</span>
+        <Scale className="w-4 h-4" strokeWidth={1.5} />
         <span>对比</span>
         <span className="bg-white text-gray-900 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
           {compareIds.length}

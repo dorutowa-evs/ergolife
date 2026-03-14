@@ -25,11 +25,11 @@ describe('formatMaterialLabel', () => {
 })
 
 describe('formatBool', () => {
-  it('returns icon + text for true', () => {
-    expect(formatBool(true)).toBe('✓ 有')
+  it('returns 有 for true', () => {
+    expect(formatBool(true)).toBe('有')
   })
-  it('returns icon + text for false', () => {
-    expect(formatBool(false)).toBe('✗ 无')
+  it('returns 无 for false', () => {
+    expect(formatBool(false)).toBe('无')
   })
   it('returns -- for undefined', () => {
     expect(formatBool(undefined)).toBe('--')

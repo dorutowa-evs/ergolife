@@ -65,23 +65,23 @@ export default function ChairsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-page">
       <Header />
 
       <div className="max-w-7xl mx-auto px-6 py-8 flex gap-14">
         {/* 左侧筛选面板 */}
-        <div>
+        <div className="pt-3">
           <FilterPanel />
         </div>
 
         {/* 右侧内容区 */}
         <div className="flex-1 min-w-0">
           {/* 工具栏 */}
-          <div className="flex items-center justify-between mb-6 bg-white border border-gray-100 shadow-sm rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between mb-6 px-1 py-3">
             <p className="text-sm text-gray-500">
-              Showing{' '}
-              <span className="font-semibold text-gray-900">{filtered.length}</span>{' '}
-              results
+              共{' '}
+              <span className="font-medium text-gray-900">{filtered.length}</span>{' '}
+              件商品
             </p>
             <SortDropdown
               options={SORT_OPTIONS}

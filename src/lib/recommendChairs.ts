@@ -2,6 +2,7 @@ import type { Chair } from '@/types/catalog'
 
 export type SittingHours = '<4' | '4-8' | '>8'
 export type PainLevel = 'none' | 'moderate' | 'severe'
+export type PosturePreference = 'upright' | 'reclined' | 'forward'
 
 export interface UserParams {
   height: number
@@ -11,6 +12,7 @@ export interface UserParams {
   sittingHours?: SittingHours
   hasBackPain?: boolean
   neckPain?: PainLevel
+  posture?: PosturePreference
 }
 
 export interface FormErrors {
@@ -66,6 +68,8 @@ export function scoreChair(chair: Chair, params: UserParams): number {
     if (chair.isLumbarAdjustable) score += 10
   }
   if (params.hasBackPain && !chair.hasLumbar) score -= 20
+  if (params.posture === 'reclined' && chair.recliningAngle > 110) score += 10
+  if (params.posture === 'upright' && chair.hasLumbar && chair.isLumbarAdjustable) score += 5
   const hasNeckPain = params.neckPain && params.neckPain !== 'none'
   if (chair.headrestAdjustment !== null) {
     score += 10
@@ -98,6 +102,11 @@ export function generateDescription(params: UserParams): string {
     desc += '，有颈椎酸痛建议优先选择带头枕的椅子'
   } else if (params.height > 175 || params.sittingHours === '>8') {
     desc += '，建议配备头枕'
+  }
+  if (params.posture === 'reclined') {
+    desc += '，偏好后仰姿势建议选择后仰角度大于 110° 的椅子'
+  } else if (params.posture === 'forward') {
+    desc += '，偏好前倾姿势建议确认椅子是否支持前倾锁定功能'
   }
   return desc
 }

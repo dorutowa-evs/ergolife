@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { ChairDetailClient } from '../ChairDetailClient'
 import { CompareProvider } from '@/contexts/CompareContext'
 import { Toaster } from 'sonner'
@@ -31,35 +30,30 @@ it('renders chair name', () => {
   expect(screen.getByText('Aeron Chair')).toBeInTheDocument()
 })
 
-it('renders platform prices', () => {
+it('renders best price', () => {
+  render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
+  expect(screen.getAllByText(/\$1,839/).length).toBeGreaterThanOrEqual(1)
+  expect(screen.getByText('最低平台价')).toBeInTheDocument()
+})
+
+it('renders platform price cards', () => {
   render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
   expect(screen.getByText('淘宝')).toBeInTheDocument()
   expect(screen.getByText('京东')).toBeInTheDocument()
-  expect(screen.getByText('拼多多')).toBeInTheDocument()
 })
 
-it('renders spec table labels', () => {
+it('renders spec labels', () => {
   render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
-  expect(screen.getByText('规格参数')).toBeInTheDocument()
+  expect(screen.getByText('腰靠')).toBeInTheDocument()
   expect(screen.getByText('材质')).toBeInTheDocument()
   expect(screen.getByText('靠背高度')).toBeInTheDocument()
   expect(screen.getByText('头枕')).toBeInTheDocument()
 })
 
-it('shows 加入对比 when chair not in compare list', () => {
+it('renders spec values', () => {
   render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
-  expect(screen.getByRole('button', { name: /加入对比/ })).toBeInTheDocument()
-})
-
-it('shows 已加入 after adding to compare', async () => {
-  render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
-  await userEvent.click(screen.getByRole('button', { name: /加入对比/ }))
-  expect(screen.getByRole('button', { name: /已加入/ })).toBeInTheDocument()
-})
-
-it('shows toast when compare list is full', async () => {
-  localStorage.setItem('compare-list', JSON.stringify(['c002', 'c003', 'c004', 'c005', 'c006']))
-  render(<ChairDetailClient chair={chair} materials={materials} colors={colors} />, { wrapper: Wrapper })
-  await userEvent.click(screen.getByRole('button', { name: /加入对比/ }))
-  expect(screen.getByText('最多对比 5 个商品')).toBeInTheDocument()
+  expect(screen.getByText('64 cm')).toBeInTheDocument()
+  expect(screen.getByText('46 cm')).toBeInTheDocument()
+  expect(screen.getByText('110°')).toBeInTheDocument()
+  expect(screen.getByText('8D')).toBeInTheDocument()
 })

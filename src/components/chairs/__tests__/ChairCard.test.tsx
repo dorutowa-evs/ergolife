@@ -15,7 +15,7 @@ describe('ChairCard', () => {
   it('renders name and price', () => {
     render(<ChairCard chair={chair} isInCompare={false} onAdd={vi.fn()} onRemove={vi.fn()} />)
     expect(screen.getByText('Test Chair')).toBeInTheDocument()
-    expect(screen.getByText('$399.00')).toBeInTheDocument()
+    expect(screen.getByText('$399')).toBeInTheDocument()
   })
 
   it('shows add button on image hover when not in compare', async () => {

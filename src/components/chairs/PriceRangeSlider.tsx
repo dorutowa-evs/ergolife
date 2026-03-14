@@ -39,8 +39,14 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
       <Slider
         className="mb-3"
         min={min} max={max} step={10}
+        minStepsBetweenThumbs={1}
         value={[value[0], value[1]]}
-        onValueChange={([a, b]) => onChange([a, b])}
+        onValueChange={([a, b]) => {
+          setLocalMin(String(a))
+          setLocalMax(String(b))
+          setError(null)
+          onChange([a, b])
+        }}
       />
 
       <div className="flex items-center gap-2">
@@ -49,10 +55,10 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
           <input
             type="number"
             value={localMin}
-            onChange={(e) => setLocalMin(e.target.value)}
+            onChange={(e) => { setLocalMin(e.target.value); commit(e.target.value, localMax) }}
             onBlur={() => commit(localMin, localMax)}
             onKeyDown={(e) => e.key === 'Enter' && commit(localMin, localMax)}
-            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
               error ? 'border-red-500 bg-red-50' : 'border-gray-200'
             }`}
             aria-label="最低价格"
@@ -64,10 +70,10 @@ export function PriceRangeSlider({ min, max, value, onChange }: Props) {
           <input
             type="number"
             value={localMax}
-            onChange={(e) => setLocalMax(e.target.value)}
+            onChange={(e) => { setLocalMax(e.target.value); commit(localMin, e.target.value) }}
             onBlur={() => commit(localMin, localMax)}
             onKeyDown={(e) => e.key === 'Enter' && commit(localMin, localMax)}
-            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 ${
+            className={`w-full border rounded-md pl-6 pr-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
               error ? 'border-red-500 bg-red-50' : 'border-gray-200'
             }`}
             aria-label="最高价格"

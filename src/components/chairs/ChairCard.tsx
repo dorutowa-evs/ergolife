@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Armchair } from 'lucide-react'
 import { getMaterials, getColors } from '@/lib/catalog'
+import { formatPrice } from '@/lib/formatters'
 import type { Chair } from '@/types/catalog'
 
 const materials = getMaterials()
@@ -22,7 +23,7 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
   const [btnHovered, setBtnHovered] = useState(false)
 
   return (
-    <div className={`rounded-xl overflow-hidden border-2 transition-all bg-white shadow-sm hover:shadow-md ${
+    <div className={`rounded-xl overflow-hidden border-2 transition-colors bg-white shadow-sm ${
       isInCompare ? 'border-gray-900' : 'border-transparent hover:border-gray-200'
     }`}>
       {/* 图片区域 */}
@@ -75,8 +76,8 @@ export function ChairCard({ chair, isInCompare, onAdd, onRemove }: Props) {
 
         {/* 价格区域 */}
         <div className="mt-1">
-          <span className="text-base font-semibold text-gray-900">
-            ${chair.price.toFixed(2)}
+          <span className="text-base text-gray-900">
+            {formatPrice(chair.price)}
           </span>
         </div>
       </div>

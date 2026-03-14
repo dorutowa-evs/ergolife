@@ -3,7 +3,7 @@
     "minColumnWidth": 200,
     "itemsPerPage": 12,
     "priceMin": 0,
-    "priceMax": 10000
+    "priceMax": 5000
   },
   "materials": [
     { "id": "mesh",    "label": "网布" },
@@ -218,7 +218,7 @@
       "price": 549,
       "imageUrl": "/images/chairs/secretlab-titan-evo.jpg",
       "imageFit": "contain",
-      "material": "fabric",
+      "material": "leather",
       "color": "black",
       "headrestAdjustment": "3D",
       "armrestAdjustment": "4D",
@@ -272,7 +272,7 @@
       "price": 399,
       "imageUrl": "/images/chairs/razer-iskur.jpg",
       "imageFit": "contain",
-      "material": "fabric",
+      "material": "leather",
       "color": "black",
       "headrestAdjustment": null,
       "armrestAdjustment": "4D",
