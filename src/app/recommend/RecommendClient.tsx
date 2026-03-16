@@ -2,7 +2,6 @@
 import { useCallback, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Header } from '@/components/layout/Header'
 import { ChairCard } from '@/components/chairs/ChairCard'
 import { CompareFAB } from '@/components/compare/CompareFAB'
@@ -15,37 +14,12 @@ import {
   generateDescription,
   type UserParams,
   type ScoredChair,
-  type SittingHours,
-  type PainLevel,
   type PosturePreference,
   type FormErrors,
 } from '@/lib/recommendChairs'
 
 const allChairs = getChairs()
 
-const PAIN_OPTIONS: { value: PainLevel; label: string }[] = [
-  { value: 'none', label: '无' },
-  { value: 'moderate', label: '轻微' },
-  { value: 'severe', label: '严重' },
-]
-
-function PainSelector({ value, onChange }: { value: PainLevel; onChange: (v: PainLevel) => void }) {
-  return (
-    <ToggleGroup
-      type="single"
-      value={value}
-      onValueChange={(v) => { if (v) onChange(v as PainLevel) }}
-      variant="outline"
-      className="w-full"
-    >
-      {PAIN_OPTIONS.map(({ value: v, label }) => (
-        <ToggleGroupItem key={v} value={v} className="flex-1 text-xs data-[state=on]:bg-gray-950 data-[state=on]:text-white">
-          {label}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
-  )
-}
 
 function getMatchBadge(score: number): { label: string; className: string } {
   if (score >= 80) return { label: '高度匹配', className: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' }
@@ -83,13 +57,10 @@ export function RecommendClient() {
 
   const [heightStr, setHeightStr] = useState('')
   const [weightStr, setWeightStr] = useState('')
-  const [thighLengthStr, setThighLengthStr] = useState('')
-  const [shoulderWidthStr, setShoulderWidthStr] = useState('')
-  const [sittingHours, setSittingHours] = useState<SittingHours | undefined>()
+  const [legLengthStr, setLegLengthStr] = useState('')
   const [posture, setPosture] = useState<PosturePreference | undefined>()
-  const [lumbar, setLumbar] = useState<PainLevel>('none')
-  const [neckPain, setNeckPain] = useState<PainLevel>('none')
   const [errors, setErrors] = useState<FormErrors>({})
+
   const [results, setResults] = useState<ScoredChair[] | null>(null)
   const [description, setDescription] = useState<string | null>(null)
 
@@ -108,12 +79,8 @@ export function RecommendClient() {
     const raw: Partial<UserParams> = {
       height: parseNum(heightStr),
       weight: parseNum(weightStr),
-      thighLength: parseNum(thighLengthStr),
-      shoulderWidth: parseNum(shoulderWidthStr),
-      sittingHours: sittingHours,
+      legLength: parseNum(legLengthStr),
       posture,
-      hasBackPain: lumbar !== 'none',
-      neckPain,
     }
     const errs = validateParams(raw)
     setErrors(errs)
@@ -158,37 +125,12 @@ export function RecommendClient() {
               </div>
             </div>
 
-            {/* Row 2: thighLength + shoulderWidth */}
-            <div className="grid grid-cols-2 gap-6 mb-3">
+            {/* Row 2: legLength + posture */}
+            <div className="grid grid-cols-2 gap-6 mb-8">
               <div>
-                <FieldLabel htmlFor="thighLength" text="大腿长" unit="cm" required={false} tooltip="坐姿时膝盖到臀部的水平距离" />
-                <input id="thighLength" type="number" value={thighLengthStr} onChange={(e) => setThighLengthStr(e.target.value)} placeholder="45" className={inputCls} />
-                <p className="text-xs text-red-500 mt-1 h-4">{errors.thighLength ?? ''}</p>
-              </div>
-              <div>
-                <FieldLabel htmlFor="shoulderWidth" text="肩宽" unit="cm" required={false} />
-                <input id="shoulderWidth" type="number" value={shoulderWidthStr} onChange={(e) => setShoulderWidthStr(e.target.value)} placeholder="44" className={inputCls} />
-                <p className="text-xs text-red-500 mt-1 h-4">{errors.shoulderWidth ?? ''}</p>
-              </div>
-            </div>
-
-            {/* Row 3: sittingHours + posture */}
-            <div className="grid grid-cols-2 gap-6 mb-3">
-              <div>
-                <div className="flex items-baseline gap-1.5 mb-2">
-                  <span className="text-xs font-medium text-gray-600">每日久坐时长</span>
-                </div>
-                <Select value={sittingHours} onValueChange={(v) => setSittingHours(v as SittingHours)}>
-                  <SelectTrigger id="sittingHours" className="w-full bg-white border-gray-200 rounded-md h-[46px] text-sm focus:ring-0 focus:border-gray-900">
-                    <SelectValue placeholder="请选择" />
-                  </SelectTrigger>
-                  <SelectContent position="popper" sideOffset={4}>
-                    <SelectItem value="<4">少于 4 小时</SelectItem>
-                    <SelectItem value="4-8">4–8 小时</SelectItem>
-                    <SelectItem value=">8">超过 8 小时</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="mt-1 h-4" />
+                <FieldLabel htmlFor="legLength" text="腿长" unit="cm" required={false} tooltip="站立时髋部到地面的距离，用于估算最适合的座高" />
+                <input id="legLength" type="number" value={legLengthStr} onChange={(e) => setLegLengthStr(e.target.value)} placeholder="88" className={inputCls} />
+                <p className="text-xs text-red-500 mt-1 h-4">{errors.legLength ?? ''}</p>
               </div>
               <div>
                 <div className="flex items-baseline gap-1.5 mb-2">
@@ -205,22 +147,6 @@ export function RecommendClient() {
                   </SelectContent>
                 </Select>
                 <p className="mt-1 h-4" />
-              </div>
-            </div>
-
-            {/* Row 4: lumbar + neckPain 同行 */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <div>
-                <div className="flex items-baseline gap-1.5 mb-2">
-                  <span className="text-xs font-medium text-gray-600">腰背酸痛</span>
-                  </div>
-                <PainSelector value={lumbar} onChange={setLumbar} />
-              </div>
-              <div>
-                <div className="flex items-baseline gap-1.5 mb-2">
-                  <span className="text-xs font-medium text-gray-600">颈椎酸痛</span>
-                  </div>
-                <PainSelector value={neckPain} onChange={setNeckPain} />
               </div>
             </div>
 
