@@ -14,7 +14,10 @@ const ARMREST_OPTIONS  = ['无', '3D', '4D', '5D', '6D', '7D', '8D']
 // Static catalog data — read once at module level, not on every render
 const allMaterials = getMaterials()
 const allColors = getColors()
-const priceBounds = getPriceBounds()
+export const priceBounds = getPriceBounds()
+
+const matLabelToId = Object.fromEntries(allMaterials.map((m) => [m.label, m.id]))
+const matIdToLabel = Object.fromEntries(allMaterials.map((m) => [m.id, m.label]))
 
 function TriStateGroup({
   label, value, onChange, onClear,
@@ -58,16 +61,15 @@ function SectionHeader({ label, hasActive, onClear }: { label: string; hasActive
   )
 }
 
-export function FilterPanel() {
-  const { filter, setFilter } = useFilter()
+interface FilterPanelInnerProps {
+  draft: FilterState
+  setDraft: (f: FilterState) => void
+  onApply: () => void
+}
+
+export function FilterPanelInner({ draft, setDraft, onApply }: FilterPanelInnerProps) {
   const { min: absMin, max: absMax } = priceBounds
-  const materials = allMaterials
-  const colors = allColors
 
-  const [draft, setDraft] = useState<FilterState>(filter)
-
-  const matLabelToId = Object.fromEntries(materials.map((m) => [m.label, m.id]))
-  const matIdToLabel = Object.fromEntries(materials.map((m) => [m.id, m.label]))
   const selectedMaterialLabels = draft.materials.map((id) => matIdToLabel[id]).filter(Boolean)
 
   const toggleColor = (id: string) => {
@@ -77,7 +79,6 @@ export function FilterPanel() {
     setDraft({ ...draft, colors: next })
   }
 
-  // TileSelect uses '无' in UI but FilterState stores 'none'
   const toFilter = (ui: string[]) => ui.map(v => v === '无' ? 'none' : v)
   const toUI = (fs: string[]) => fs.map(v => v === 'none' ? '无' : v)
 
@@ -108,34 +109,10 @@ export function FilterPanel() {
           <SectionHeader label="材质" hasActive={draft.materials.length > 0}
             onClear={() => setDraft({ ...draft, materials: [] })} />
           <TileSelect
-            options={materials.map((m) => m.label)}
+            options={allMaterials.map((m) => m.label)}
             selected={selectedMaterialLabels}
             onChange={(labels) => setDraft({ ...draft, materials: labels.map((l) => matLabelToId[l]).filter(Boolean) })}
           />
-        </div>
-
-        <hr className="border-gray-100" />
-
-        {/* 靠背高度 */}
-        <div className="py-5">
-          <SectionHeader label="靠背高度"
-            hasActive={draft.backHeightMin > 40 || draft.backHeightMax < 70}
-            onClear={() => setDraft({ ...draft, backHeightMin: 40, backHeightMax: 70 })} />
-          <RangeSlider min={40} max={70} unit="cm"
-            value={[draft.backHeightMin, draft.backHeightMax]}
-            onChange={([a, b]) => setDraft({ ...draft, backHeightMin: a, backHeightMax: b })} />
-        </div>
-
-        <hr className="border-gray-100" />
-
-        {/* 座高 */}
-        <div className="py-5">
-          <SectionHeader label="座高"
-            hasActive={draft.seatHeightMin > 40 || draft.seatHeightMax < 55}
-            onClear={() => setDraft({ ...draft, seatHeightMin: 40, seatHeightMax: 55 })} />
-          <RangeSlider min={40} max={55} unit="cm"
-            value={[draft.seatHeightMin, draft.seatHeightMax]}
-            onChange={([a, b]) => setDraft({ ...draft, seatHeightMin: a, seatHeightMax: b })} />
         </div>
 
         <hr className="border-gray-100" />
@@ -157,7 +134,7 @@ export function FilterPanel() {
           <SectionHeader label="颜色" hasActive={draft.colors.length > 0}
             onClear={() => setDraft({ ...draft, colors: [] })} />
           <div className="flex flex-wrap gap-2">
-            {colors.map((c) => (
+            {allColors.map((c) => (
               <button
                 key={c.id}
                 type="button"
@@ -221,12 +198,25 @@ export function FilterPanel() {
       <div className="pt-5">
         <button
           type="button"
-          onClick={() => setFilter(draft)}
+          onClick={onApply}
           className="w-full bg-gray-950 text-white py-2.5 rounded-md text-xs font-bold tracking-[0.12em] uppercase hover:bg-gray-800 active:scale-[0.99] transition-all"
         >
           检索
         </button>
       </div>
     </aside>
+  )
+}
+
+export function FilterPanel() {
+  const { filter, setFilter } = useFilter()
+  const [draft, setDraft] = useState<FilterState>(filter)
+
+  return (
+    <FilterPanelInner
+      draft={draft}
+      setDraft={setDraft}
+      onApply={() => setFilter(draft)}
+    />
   )
 }

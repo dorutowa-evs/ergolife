@@ -5,9 +5,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Header } from '@/components/layout/Header'
 import { ChairCard } from '@/components/chairs/ChairCard'
 import { CompareFAB } from '@/components/compare/CompareFAB'
+import { FilterPanelInner, priceBounds } from '@/components/chairs/FilterPanel'
 import { useCompare } from '@/contexts/CompareContext'
 import { useToast } from '@/hooks/useToast'
 import { getChairs } from '@/lib/catalog'
+import { filterChairs } from '@/lib/filterChairs'
+import { makeDefaultFilter, type FilterState } from '@/types/catalog'
 import {
   validateParams,
   recommendChairs,
@@ -19,7 +22,7 @@ import {
 } from '@/lib/recommendChairs'
 
 const allChairs = getChairs()
-
+const defaultResultFilter = makeDefaultFilter(priceBounds.min, priceBounds.max)
 
 function getMatchBadge(score: number): { label: string; className: string } {
   if (score >= 80) return { label: '高度匹配', className: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' }
@@ -49,7 +52,9 @@ function FieldLabel({ htmlFor, text, unit, required, tooltip }: { htmlFor: strin
   )
 }
 
-const inputCls = 'w-full bg-white border border-gray-200 rounded-md px-4 py-3 text-gray-900 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+const fieldControlCls = 'h-14 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-900'
+const inputCls = `${fieldControlCls} placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`
+const selectTriggerCls = `${fieldControlCls} focus:ring-0 focus:border-gray-900`
 
 export function RecommendClient() {
   const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
@@ -63,6 +68,9 @@ export function RecommendClient() {
 
   const [results, setResults] = useState<ScoredChair[] | null>(null)
   const [description, setDescription] = useState<string | null>(null)
+
+  const [resultFilterDraft, setResultFilterDraft] = useState<FilterState>(defaultResultFilter)
+  const [resultFilter, setResultFilter] = useState<FilterState>(defaultResultFilter)
 
   const handleAddToCompare = useCallback((id: string) => {
     if (isFull) { showToast('最多对比 5 个商品'); return }
@@ -89,10 +97,21 @@ export function RecommendClient() {
     const params = raw as UserParams
     setResults(recommendChairs(allChairs, params))
     setDescription(generateDescription(params))
+    // reset result filter when re-running recommendation
+    setResultFilterDraft(defaultResultFilter)
+    setResultFilter(defaultResultFilter)
   }
 
   const hasHighMatch = results?.some((r) => r.score >= 80) ?? false
-  const matchCount = results?.filter((r) => r.score > 0).length ?? 0
+
+  // Apply result filter to scored chairs
+  const filteredResults = results
+    ? filterChairs(results.map((r) => r.chair), resultFilter).map((chair) => {
+        return results.find((r) => r.chair.id === chair.id)!
+      })
+    : null
+
+  const matchCount = filteredResults?.filter((r) => r.score > 0).length ?? 0
 
   return (
     <div className="min-h-screen bg-page">
@@ -137,7 +156,7 @@ export function RecommendClient() {
                   <span className="text-xs font-medium text-gray-600">工作姿势</span>
                 </div>
                 <Select value={posture} onValueChange={(v) => setPosture(v as PosturePreference)}>
-                  <SelectTrigger className="w-full bg-white border-gray-200 rounded-md h-[46px] text-sm focus:ring-0 focus:border-gray-900">
+                  <SelectTrigger className={selectTriggerCls}>
                     <SelectValue placeholder="请选择" />
                   </SelectTrigger>
                   <SelectContent position="popper" sideOffset={4}>
@@ -193,40 +212,54 @@ export function RecommendClient() {
         </div>
 
         {/* Results section */}
-        {results !== null && (
-          <div>
-            <div className="flex items-baseline justify-between mb-8">
-              <h2 className="text-xl font-black tracking-tight text-gray-950 uppercase">
-                {hasHighMatch ? '推荐结果' : '以下为相对接近的推荐'}
-              </h2>
-              {matchCount > 0 && (
-                <span className="text-[10px] font-bold tracking-[0.12em] text-gray-400 uppercase">
-                  共 {matchCount} 件匹配
-                </span>
+        {filteredResults !== null && (
+          <div className="flex gap-14">
+            {/* Filter sidebar */}
+            <div className="pt-3">
+              <FilterPanelInner
+                draft={resultFilterDraft}
+                setDraft={setResultFilterDraft}
+                onApply={() => setResultFilter(resultFilterDraft)}
+              />
+            </div>
+
+            {/* Chairs grid */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline justify-between mb-8">
+                <h2 className="text-xl font-black tracking-tight text-gray-950 uppercase">
+                  {hasHighMatch ? '推荐结果' : '以下为相对接近的推荐'}
+                </h2>
+                {matchCount > 0 && (
+                  <span className="text-[10px] font-bold tracking-[0.12em] text-gray-400 uppercase">
+                    共 {matchCount} 件匹配
+                  </span>
+                )}
+              </div>
+              {filteredResults.every((r) => r.score === 0) ? (
+                <p className="text-gray-500 text-sm">暂未找到匹配的椅子，建议调整参数后重试</p>
+              ) : filteredResults.length === 0 ? (
+                <p className="text-gray-500 text-sm">没有符合筛选条件的椅子，试试调整筛选条件</p>
+              ) : (
+                <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
+                  {filteredResults.map(({ chair, score }) => {
+                    const badge = getMatchBadge(score)
+                    return (
+                      <div key={chair.id} className="relative">
+                        <ChairCard
+                          chair={chair}
+                          isInCompare={isInCompare(chair.id)}
+                          onAdd={handleAddToCompare}
+                          onRemove={removeFromCompare}
+                        />
+                        <span className={`absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full font-semibold tracking-wide ${badge.className}`}>
+                          {badge.label}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
               )}
             </div>
-            {results.every((r) => r.score === 0) ? (
-              <p className="text-gray-500 text-sm">暂未找到匹配的椅子，建议调整参数后重试</p>
-            ) : (
-              <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))' }}>
-                {results.map(({ chair, score }) => {
-                  const badge = getMatchBadge(score)
-                  return (
-                    <div key={chair.id} className="relative">
-                      <ChairCard
-                        chair={chair}
-                        isInCompare={isInCompare(chair.id)}
-                        onAdd={handleAddToCompare}
-                        onRemove={removeFromCompare}
-                      />
-                      <span className={`absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full font-semibold tracking-wide ${badge.className}`}>
-                        {badge.label}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
           </div>
         )}
       </div>
