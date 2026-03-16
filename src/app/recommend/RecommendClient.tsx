@@ -52,9 +52,9 @@ function FieldLabel({ htmlFor, text, unit, required, tooltip }: { htmlFor: strin
   )
 }
 
-const fieldControlCls = 'h-14 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-900'
+const fieldControlCls = 'h-10 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-900'
 const inputCls = `${fieldControlCls} placeholder:text-gray-300 focus:outline-none focus:border-gray-900 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`
-const selectTriggerCls = `${fieldControlCls} focus:ring-0 focus:border-gray-900`
+const selectTriggerCls = `${fieldControlCls} data-[size=default]:h-10 focus:ring-0 focus:border-gray-900`
 
 export function RecommendClient() {
   const { compareList, addToCompare, removeFromCompare, clearAll, isInCompare, isFull } = useCompare()
