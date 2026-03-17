@@ -51,6 +51,7 @@ next-env.d.ts
 # misc local
 .mcp.json
 .ripgreprc
+.playwright-mcp
 
 # stray git objects that appear in public/images/chairs/
 public/images/chairs/HEAD
